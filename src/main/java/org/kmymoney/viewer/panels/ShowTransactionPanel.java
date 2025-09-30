@@ -1,11 +1,4 @@
-/**
- * TransactionsPanel.java
- * created: 21.10.2006 17:17:17
- */
 package org.kmymoney.viewer.panels;
-
-//other imports
-//automatically created logger for debug and error -output
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -35,14 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * (c) 2006 by Wolschon Softwaredesign und Beratung.<br/>
- * Project: kmymoneyReader<br/>
- * TransactionsPanel.java<br/>
- * created: 21.10.2006 17:17:17 <br/>
- * <br/><br/>
- * <b>This Panel shows all splits of a single transaction.</b>
- *
- * @author <a href="Marcus@Wolschon.biz">Marcus Wolschon</a>
+ * This Panel shows all splits of a single transaction.
  */
 public class ShowTransactionPanel extends JPanel {
 

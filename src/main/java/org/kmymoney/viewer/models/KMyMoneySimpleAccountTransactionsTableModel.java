@@ -1,12 +1,3 @@
-/**
- * KMyMoneySimpleAccountTransactionsTableModel.java
- * Created on 15.05.2005
- * (c) 2005 by "Wolschon Softwaredesign und Beratung".
- * -----------------------------------------------------------
- * major Changes:
- * 15.05.2005 - initial version
- * ...
- */
 package org.kmymoney.viewer.models;
 
 import java.io.PrintWriter;
@@ -27,11 +18,7 @@ import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 
 /**
- * created: 15.05.2005 <br/>
- *
  * A TableModel that shows the transaction and balance of an Account.
- * @author <a href="mailto:Marcus@Wolschon.biz">Marcus Wolschon</a>
- *
  */
 public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTransactionsSplitsTableModel {
 

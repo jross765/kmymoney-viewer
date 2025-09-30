@@ -1,22 +1,3 @@
-/**
- * OpenFilePluginMenuAction.java
- * Created on 06.11.2005
- * (c) 2005 by "Wolschon Softwaredesign und Beratung".
- *
- *  Permission is granted to use, modify, publish and sub-license this code
- *  as specified in the contract. If nothing else is specified these rights
- *  are given non-exclusively with no restrictions solely to the contractor(s).
- *  If no specified otherwise I reserve the right to use, modify, publish and
- *  sub-license this code to other parties myself.
- *
- * Otherwise, this code is made available under GPLv3 or later.
- *
- * -----------------------------------------------------------
- * major Changes:
- *  06.11.2005 - initial version
- * ...
- *
- */
 package org.kmymoney.jkmymoney.actions;
 
 import java.awt.Cursor;

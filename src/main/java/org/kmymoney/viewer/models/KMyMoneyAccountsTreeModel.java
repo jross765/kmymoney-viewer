@@ -1,15 +1,3 @@
-/**
- * KMyMoneyAccountsTreeModel.java
- * Created on 15.05.2005
- * (c) 2005 by "Wolschon Softwaredesign und Beratung".
- *
- *
- * -----------------------------------------------------------
- * major Changes:
- *  15.05.2005 - initial version
- * ...
- *
- */
 package org.kmymoney.viewer.models;
 
 import java.util.ArrayList;
@@ -29,11 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * created: 15.05.2005 <br/>
- *
  * A TreeModel representing the accounts in a KMyMoney-File.
- * @author <a href="mailto:Marcus@Wolschon.biz">Marcus Wolschon</a>
- *
  */
 public class KMyMoneyAccountsTreeModel implements TreeModel {
     /**

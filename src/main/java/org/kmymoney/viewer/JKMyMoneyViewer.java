@@ -1,13 +1,3 @@
-/**
- * JKMyMoneyViewer.java
- * Created on 15.05.2005
- * (c) 2005 by "Wolschon Softwaredesign und Beratung".
- * -----------------------------------------------------------
- * major Changes:
- * 15.05.2005 - initial version
- * 16.05.2005 - split into JKMyMoneyViewer and JKMyMoney
- * ...
- */
 package org.kmymoney.viewer;
 
 import java.awt.BorderLayout;
@@ -65,10 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * created: 15.05.2005 <br/>
  * Simple Viewer for KMyMoney-Files.
- *
- * @author <a href="mailto:Marcus@Wolschon.biz">Marcus Wolschon</a>
  */
 @SuppressWarnings("serial")
 public class JKMyMoneyViewer extends JFrame {

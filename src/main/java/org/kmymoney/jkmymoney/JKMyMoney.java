@@ -1,22 +1,3 @@
-/**
- * JKMyMoney.java
- * Created on 16.05.2005
- * (c) 2005 by "Wolschon Softwaredesign und Beratung".
- * <p>
- * Permission is granted to use, modify, publish and sub-license this code
- * as specified in the contract. If nothing else is specified these rights
- * are given non-exclusively with no restrictions solely to the contractor(s).
- * If no specified otherwise I reserve the right to use, modify, publish and
- * sub-license this code to other parties myself.
- * <p>
- * Otherwise, this code is made available under GPLv3 or later.
- * <p>
- * -----------------------------------------------------------
- * major Changes:
- * 16.05.2005 - initial version
- * 06.11.2005 - added file-menu-plugins
- * ...
- */
 package org.kmymoney.jkmymoney;
 
 import java.awt.Cursor;
@@ -61,19 +42,14 @@ import org.kmymoney.viewer.JKMyMoneyViewer;
 import org.kmymoney.viewer.actions.AccountAction;
 import org.kmymoney.viewer.actions.TransactionSplitAction;
 import org.kmymoney.viewer.panels.TransactionsPanel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * created: 16.05.2005 <br/>
  * (Shall become a simple java-reimplementation of kmymoney
  * that can read and write kmymoney-files.)<br/>
  * Extended version of JKMyMoneyViewer that allows for
  * changing and writing the kmymoney-file.
- * <br/>
- *
- * @author <a href="mailto:Marcus@Wolschon.biz">Marcus Wolschon</a>
  */
 public class JKMyMoney extends JKMyMoneyViewer {
 

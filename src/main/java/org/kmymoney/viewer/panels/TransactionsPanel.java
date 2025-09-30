@@ -1,7 +1,3 @@
-/**
- * TransactionsPanel.java
- * created: 21.10.2006 17:17:17
- */
 package org.kmymoney.viewer.panels;
 
 import java.awt.BorderLayout;
@@ -43,17 +39,10 @@ import org.slf4j.LoggerFactory;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 /**
- * (c) 2006 by Wolschon Softwaredesign und Beratung.<br/>
- * Project: kmymoneyReader<br/>
- * TransactionsPanel.java<br/>
- * created: 21.10.2006 17:17:17 <br/>
- * <br/><br/>
- * <b>This Panel shows a list of transactions.
+ * This Panel shows a list of transactions.
  * These transactions currently can only be "all transactions
  * of a single account"
- * but later other transaction-lists like search-results will be possible.</b>
- *
- * @author <a href="Marcus@Wolschon.biz">Marcus Wolschon</a>
+ * but later other transaction-lists like search-results will be possible.
  */
 public class TransactionsPanel extends JPanel {
 

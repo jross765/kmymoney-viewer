@@ -1,34 +1,16 @@
-/**
- * SaveAsFilePluginMenuAction.java
- * Created on 15.12.2005
- * (c) 2005 by "Wolschon Softwaredesign und Beratung".
- *
- *  Permission is granted to use, modify, publish and sub-license this code
- *  as specified in the contract. If nothing else is specified these rights
- *  are given non-exclusively with no restrictions solely to the contractor(s).
- *  If no specified otherwise I reserve the right to use, modify, publish and
- *  sub-license this code to other parties myself.
- *
- * Otherwise, this code is made available under GPLv3 or later.
- *
- * -----------------------------------------------------------
- * major Changes:
- *  15.12.2005 - initial version
- * ...
- *
- */
 package org.kmymoney.jkmymoney.actions;
+
+import java.awt.Cursor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JOptionPane;
 
 import org.java.plugin.registry.Extension;
 import org.kmymoney.jkmymoney.JKMyMoney;
 import org.kmymoney.jkmymoney.plugin.DataSourcePlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * The action-listeners we use for the File->Save as -Menu.

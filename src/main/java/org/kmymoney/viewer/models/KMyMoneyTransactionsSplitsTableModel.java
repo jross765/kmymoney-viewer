@@ -1,7 +1,3 @@
-/**
- * KMyMoneyTransactionsSplitsTableModel.java
- * created: 21.10.2006 17:38:52
- */
 package org.kmymoney.viewer.models;
 
 
@@ -12,14 +8,8 @@ import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 
 
 /**
- * (c) 2006 by Wolschon Softwaredesign und Beratung.<br/>
- * Project: kmymoneyReader<br/>
- * KMyMoneyTransactionsSplitsTableModel.java<br/>
- * created: 21.10.2006 17:38:52 <br/>
- *<br/><br/>
- * <b>TableModels implementing this interface contain a list of transactions.
- * They may be all transactions of an account, a search-result or sth. similar.</b>
- * @author <a href="Marcus@Wolschon.biz">Marcus Wolschon</a>
+ * TableModels implementing this interface contain a list of transactions.
+ * They may be all transactions of an account, a search-result or sth. similar.
  */
 public interface KMyMoneyTransactionsSplitsTableModel extends TableModel {
 
