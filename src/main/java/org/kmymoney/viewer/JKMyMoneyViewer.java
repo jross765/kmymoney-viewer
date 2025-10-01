@@ -159,7 +159,7 @@ public class JKMyMoneyViewer extends JFrame {
 	/**
 	 * The title of the frame.
 	 */
-	private static final String TITLE = "JKMyMoney";
+	private static final String TITLE = "JKMyMoney Viewer";
 
 	/**
 	 * The split-pane between account-tree and transactions-table.
