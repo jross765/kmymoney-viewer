@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.kmymoney</groupId>
 		<artifactId>kmymoney</artifactId>
-		<version>0.8.0</version>
+		<version>0.9</version>
 	</parent>
 
 	<artifactId>kmymoney-viewer</artifactId>
@@ -45,7 +45,7 @@
 			<dependency>
 				<groupId>org.kmymoney</groupId>
 				<artifactId>kmymoney-api</artifactId>
-				<version>0.8.0</version>
+				<version>0.8.1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
