@@ -97,7 +97,7 @@
 
 		<!-- *********************************************************  -->
 
-		<!-- GnuCash Base -->
+		<!-- KMyMoney Base -->
 		<dependency>
 			<groupId>org.kmymoney</groupId>
 			<artifactId>kmymoney-base</artifactId>
@@ -105,15 +105,15 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- GnuCash API -->
+		<!-- KMyMoney API -->
 		<dependency>
 			<groupId>org.kmymoney</groupId>
 			<artifactId>kmymoney-api</artifactId>
-			<version>0.8.0</version>
+			<version>0.8.1</version>
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- GnuCash API Extensions -->
+		<!-- KMyMoney API Extensions -->
 		<dependency>
 			<groupId>org.kmymoney</groupId>
 			<artifactId>kmymoney-api-ext</artifactId>
@@ -122,6 +122,7 @@
 		</dependency>
 
 	</dependencies>
+
 
 	<build>
 
