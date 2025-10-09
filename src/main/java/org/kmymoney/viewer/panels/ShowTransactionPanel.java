@@ -22,6 +22,7 @@ import javax.swing.SwingUtilities;
 
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
+import org.kmymoney.viewer.Const;
 import org.kmymoney.viewer.actions.TransactionSplitAction;
 import org.kmymoney.viewer.models.KMyMoneyTransactionsSplitsTableModel;
 import org.slf4j.Logger;
@@ -32,10 +33,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ShowTransactionPanel extends JPanel {
 
-
-	/**
-	 * Automatically created logger for debug and error-output.
-	 */
 	static final Logger LOGGER = LoggerFactory.getLogger(ShowTransactionPanel.class);
 
 	/**
@@ -220,30 +217,32 @@ public class ShowTransactionPanel extends JPanel {
 
 		getTransactionTable().setModel(model);
 		transactionTable.setAutoCreateRowSorter(false);
-		// set column-width
+		
+		// ---
+		// BEGIN col widths
 		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(transactionTable.getFont());
 
+		transactionTable.getColumn("date").setPreferredWidth(
+				SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DATE_FORMAT.format(LocalDateTime.now())) + Const.TABLE_COL_EXTRA_WIDTH);
 
-		final int extraDateWidth = 5;
-		transactionTable.getColumn("date").setPreferredWidth(SwingUtilities.computeStringWidth(metrics,
-				SingleTransactionTableModel.DATEFORMAT.format(LocalDateTime.now())) + extraDateWidth);
+		int currencyWidthDefault = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_SMALL));
+		int currencyWidthMax     = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_BIG));
 
-		final int maxAnticipatedValue = 10000;
-		int currencyWidth = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULTCURRENCYFORMAT.format(maxAnticipatedValue));
-
-		if (aModel.isMultiCurrency()) {
-			final int extraWidth = 20;
-			currencyWidth = currencyWidth * 2 + extraWidth;
-		}
-		transactionTable.getColumn("+").setPreferredWidth(currencyWidth);
-		transactionTable.getColumn("-").setPreferredWidth(currencyWidth);
+		transactionTable.getColumn("+").setPreferredWidth(currencyWidthDefault);
+		transactionTable.getColumn("-").setPreferredWidth(currencyWidthDefault);
 		transactionTable.getColumn("action").setPreferredWidth(SwingUtilities.computeStringWidth(metrics, "VERKAUF"));
 
+		transactionTable.getColumn("date").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
+		transactionTable.getColumn("+").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
+		transactionTable.getColumn("-").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
+		transactionTable.getColumn("action").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
 
-		transactionTable.getColumn("date").setMaxWidth(SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DATEFORMAT.format(LocalDateTime.now())) + 5);
-		transactionTable.getColumn("+").setMaxWidth(currencyWidth);
-		transactionTable.getColumn("-").setMaxWidth(currencyWidth);
+		transactionTable.getColumn("date").setMaxWidth(Const.TABLE_COL_MAX_WIDTH);
+		transactionTable.getColumn("+").setMaxWidth(currencyWidthMax);
+		transactionTable.getColumn("-").setMaxWidth(currencyWidthMax);
 		transactionTable.getColumn("action").setMaxWidth(SwingUtilities.computeStringWidth(metrics, "VERKAUF          "));
+		// END col widths
+		// ---
 	}
 
 	/**

@@ -23,11 +23,7 @@ import org.kmymoney.viewer.models.KMyMoneyTransactionsSplitsTableModel;
  */
 public class DesriptionCellRenderer implements TableCellRenderer {
 
-	/**
-	 * Automatically created logger for debug and error-output.
-	 */
-	private static final Logger LOG = Logger
-			.getLogger(DesriptionCellRenderer.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DesriptionCellRenderer.class.getName());
 
 	//------------------------ support for propertyChangeListeners ------------------
 
@@ -123,7 +119,8 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 
 		JLabel renderer = new JLabel(value == null?"":value.toString());
 		Font f = renderer.getFont();
-		renderer.setFont(f.deriveFont(f.getStyle() ^ Font.BOLD));
+		// renderer.setFont(f.deriveFont(f.getStyle() ^ Font.BOLD));
+		renderer.setFont(f.deriveFont(f.getStyle()));
 
 		try {
 			markTokens(renderer, renderer.getText());
@@ -143,7 +140,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 								}
 							}
 						} catch (Exception e) {
-							LOG.log(Level.SEVERE,"[Exception] Problem in "
+							LOGGER.log(Level.SEVERE,"[Exception] Problem in "
 									+ getClass().getName() + ":getTableCellRendererComponent()"
 									+ " while traversing splits",
 									e);
@@ -153,7 +150,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 				}
 			}
 		} catch (Exception e) {
-			LOG.log(Level.SEVERE,"[Exception] Problem in "
+			LOGGER.log(Level.SEVERE,"[Exception] Problem in "
 			           + getClass().getName() + ":getTableCellRendererComponent()",
 			             e);
 		}
@@ -175,7 +172,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 				renderer.setForeground(Color.red);
 			}
 		} catch (Exception e) {
-			LOG.log(Level.SEVERE,"[Exception] Problem in "
+			LOGGER.log(Level.SEVERE,"[Exception] Problem in "
 			           + getClass().getName() + ":markUnbalanced()",
 			             e);
 			renderer.setForeground(Color.red);
@@ -197,7 +194,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 				renderer.setForeground(Color.GREEN.darker());
 			}
 		} catch (Exception e) {
-			LOG.log(Level.SEVERE,"[Exception] Problem in "
+			LOGGER.log(Level.SEVERE,"[Exception] Problem in "
 			           + getClass().getName() + ":markTokens()",
 			             e);
 		}

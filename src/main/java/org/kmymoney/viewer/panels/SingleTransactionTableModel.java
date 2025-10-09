@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.TableModelListener;
 
+import org.kmymoney.api.Const;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit.Action;
@@ -22,7 +23,7 @@ import org.kmymoney.viewer.models.KMyMoneyTransactionsSplitsTableModel;
 public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTableModel {
 
 	/**
-	 * The transaction we are showing.
+	 * The transaction that we are showing.
 	 */
 	private KMyMoneyTransaction myTransaction;
 
@@ -34,12 +35,12 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 	/**
 	 * How to format dates.
 	 */
-	public static final DateTimeFormatter DATEFORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern(Const.STANDARD_DATE_FORMAT);
 
 	/**
 	 * How to format currencies.
 	 */
-	public static final NumberFormat DEFAULTCURRENCYFORMAT = NumberFormat.getCurrencyInstance();
+	public static final NumberFormat DEFAULT_CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
 
 	/**
 	 * @param aTransaction the transaction we are showing
@@ -161,12 +162,12 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 			if (rowIndex == 0) {
 				// show data of transaction
 				switch (columnIndex) {
-					case 0: //DATE
-						return DATEFORMAT.format(getTransaction().getDatePosted());
-					case 1: //action == transaction-Number
+					case 0: // date
+						return getTransaction().getDatePostedFormatted();
+					case 1: // action == transaction-Number
 						// ::TODO
 						// return getTransactionNumber();
-					case 2: //description
+					case 2: // description
 						return getTransactionDescription();
 					case 3: { // account
 						return "";
@@ -186,17 +187,17 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 			KMyMoneyTransactionSplit split = getTransactionSplit(rowIndex - 1);
 
 			switch (columnIndex) {
-				case 0: { //DATE
-					return DATEFORMAT.format(split.getTransaction().getDatePosted());
+				case 0: { // date
+					return split.getTransaction().getDatePostedFormatted();
 				}
-				case 1: { //action
+				case 1: { // action
 					Action action = split.getAction();
 					if (action == null) {
 						return "";
 					}
 					return action;
 				}
-				case 2: { //description
+				case 2: { // description
 					String desc = split.getMemo();
 					if (desc == null || desc.trim().length() == 0) {
 						return "";

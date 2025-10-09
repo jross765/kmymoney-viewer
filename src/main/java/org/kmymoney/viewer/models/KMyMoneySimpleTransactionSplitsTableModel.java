@@ -21,9 +21,6 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
  */
 public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransactionsSplitsTableModel {
 
-    /**
-     * The account who's transactions we are showing.
-     */
     private final List<? extends KMyMoneyTransactionSplit> mySplits;
 
 
@@ -128,17 +125,17 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
             updateCurrencyFormat(split);
 
             switch(columnIndex) {
-            case 0: { //DATE
-                return dateFormat.format(split.getTransaction().getDatePosted());
+            case 0: { // date
+                return split.getTransaction().getDatePostedFormatted();
             }
-            case 1: { //transaction
+            case 1: { // transaction
                 String desc = split.getTransaction().getMemo();
                 if (desc == null || desc.trim().length() == 0) {
                     return "";
                 }
                 return desc;
             }
-            case 2: { //description
+            case 2: { // description
                 String desc = split.getMemo();
                 if (desc == null || desc.trim().length() == 0) {
                     return "";

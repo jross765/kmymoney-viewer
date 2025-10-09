@@ -29,6 +29,7 @@ import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
+import org.kmymoney.viewer.Const;
 import org.kmymoney.viewer.actions.TransactionSplitAction;
 import org.kmymoney.viewer.models.KMyMoneySimpleAccountTransactionsTableModel;
 import org.kmymoney.viewer.models.KMyMoneyTransactionsSplitsTableModel;
@@ -46,10 +47,10 @@ import xyz.schnorxoborx.base.numbers.FixedPointNumber;
  */
 public class TransactionsPanel extends JPanel {
 
-	/**
-	 * Automatically created logger for debug and error-output.
-	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionsPanel.class);
+
+	private static final int DEFAULT_WIDTH = 300;
+	private static final int DEFAULT_HEIGHT = 200;
 
 	/**
 	 * for serializing.
@@ -127,38 +128,53 @@ public class TransactionsPanel extends JPanel {
 
 		getTransactionTable().setModel(model);
 		getTransactionTable().setAutoCreateRowSorter(true);
-		// set column-width
-		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(transactionTable.getFont());
-		getTransactionTable().getColumn("date").setPreferredWidth(
-				SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.dateFormat.format(LocalDateTime.now())) + 5);
-		getTransactionTable().getColumn("+").setPreferredWidth(
-				SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.defaultCurrencyFormat.format(10000)));
-		getTransactionTable().getColumn("-").setPreferredWidth(
-				SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.defaultCurrencyFormat.format(-10000)));
+
 		TableColumn balanceColumn = null;
 		try {
 			balanceColumn = getTransactionTable().getColumn("balance");
+		} catch (Exception e) {
+			// column is allowed not to exist
 		}
-		catch (Exception e) {
-			// column is allowed to not exist
-		}
+		
+		// ---
+		// BEGIN col widths
+		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(transactionTable.getFont());
+		
+		int currencyWidthDefault = SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_SMALL));
+		int currencyWidthMax     = SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_BIG));
+
+		getTransactionTable().getColumn("date").setPreferredWidth(
+				SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.DATE_FORMAT.format(LocalDateTime.now())) + Const.TABLE_COL_EXTRA_WIDTH);
+//		getTransactionTable().getColumn("transaction").setPreferredWidth(Const.PANEL_DEFAULT_WIDTH);
+//		getTransactionTable().getColumn("description").setPreferredWidth(Const.PANEL_DEFAULT_WIDTH);
+		getTransactionTable().getColumn("+").setPreferredWidth(currencyWidthDefault);
+		getTransactionTable().getColumn("-").setPreferredWidth(currencyWidthDefault);
 		if (balanceColumn != null) {
-			balanceColumn.setPreferredWidth(
-					SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.defaultCurrencyFormat.format
-							(-10000)));
+			balanceColumn.setPreferredWidth(currencyWidthDefault);
 		}
 
-		getTransactionTable().getColumn("date").setMaxWidth(
-				SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.dateFormat.format(LocalDateTime.now())) + 5);
-		getTransactionTable().getColumn("+").setMaxWidth(
-				SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.defaultCurrencyFormat.format(1000000)));
-		getTransactionTable().getColumn("-").setMaxWidth(
-				SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.defaultCurrencyFormat.format(-1000000)));
+		getTransactionTable().getColumn("date").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
+		getTransactionTable().getColumn("transaction").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
+		getTransactionTable().getColumn("description").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
+		getTransactionTable().getColumn("+").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
+		getTransactionTable().getColumn("-").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
 		if (balanceColumn != null) {
-			balanceColumn.setMaxWidth(SwingUtilities
-					.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.defaultCurrencyFormat.format(-1000000)));
+			balanceColumn.setMinWidth(Const.TABLE_COL_MIN_WIDTH);
 		}
 
+//		getTransactionTable().getColumn("date").setMaxWidth(
+//				SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.dateFormat.format(LocalDateTime.now())) + Const.TABLE_COL_WIDTH_TOL);
+		getTransactionTable().getColumn("date").setMaxWidth(Const.TABLE_COL_MAX_WIDTH);
+//		getTransactionTable().getColumn("transaction").setMaxWidth(Const.PANEL_MAX_WIDTH);
+//		getTransactionTable().getColumn("description").setMaxWidth(Const.PANEL_MAX_WIDTH);
+		getTransactionTable().getColumn("+").setMaxWidth(currencyWidthMax);
+		getTransactionTable().getColumn("-").setMaxWidth(currencyWidthMax);
+		if (balanceColumn != null) {
+			balanceColumn.setMaxWidth(currencyWidthMax);
+		}
+		// END col widths
+		// ---
+		
 		getTransactionTable().getColumn("transaction").setCellRenderer(new DesriptionCellRenderer());
 		getTransactionTable().getColumn("description").setCellRenderer(new DesriptionCellRenderer());
 
@@ -182,7 +198,6 @@ public class TransactionsPanel extends JPanel {
 	 * @param account if null, an empty table will be shown.
 	 */
 	public void setAccount(final KMyMoneyAccount account) {
-
 		if (account == null) {
 			setModel(new KMyMoneySimpleAccountTransactionsTableModel());
 		} else {
@@ -194,7 +209,7 @@ public class TransactionsPanel extends JPanel {
 	 * This method initializes this panel.
 	 */
 	private void initialize() {
-		this.setSize(300, 200);
+		this.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		this.setLayout(new BorderLayout());
 		this.add(getTransactionTableScrollPane(), BorderLayout.CENTER);
 		this.add(getSummaryPanel(), BorderLayout.SOUTH);
@@ -416,7 +431,6 @@ public class TransactionsPanel extends JPanel {
 	 * the selectionSummaryAccountComboBox.
 	 */
 	private void updateSelectionSummaryAccountList() {
-
 		Set<KMyMoneyAccount> accounts = new TreeSet<KMyMoneyAccount>();
 
 		int selectedCount = getTransactionTable().getSelectedRowCount();
@@ -494,7 +508,6 @@ public class TransactionsPanel extends JPanel {
 	 * @param split  the split who's transaction to look at
 	 */
 	private void replaceSplitsWithSelectedAccountsSplits(final Set<KMyMoneyTransactionSplit> retval, final KMyMoneyTransactionSplit split) {
-
 		JComboBox combo = getSelectionSummaryAccountComboBox();
 		KMyMoneyAccount selectedAccount =
 				(KMyMoneyAccount) combo.getSelectedItem();

@@ -43,32 +43,30 @@ import javax.swing.tree.TreePath;
 
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyFile;
-import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.viewer.actions.AccountAction;
 import org.kmymoney.viewer.actions.OpenAccountInNewTab;
 import org.kmymoney.viewer.actions.OpenAccountInNewWindow;
 import org.kmymoney.viewer.actions.TransactionSplitAction;
 import org.kmymoney.viewer.models.KMyMoneyAccountsTreeModel;
+import org.kmymoney.viewer.models.KMyMoneyFileImpl;
 import org.kmymoney.viewer.panels.TaxReportPanel;
 import org.kmymoney.viewer.panels.TransactionsPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Simple Viewer for KMyMoney-Files.
+ * Simple Viewer for KMyMoney files.
  */
 @SuppressWarnings("serial")
 public class JKMyMoneyViewer extends JFrame {
 
+	private static final String TITLE = "JKMyMoney Viewer";
+
+	private static final int DEFAULT_WIDTH  = 750;
+	private static final int DEFAULT_HEIGHT = 600;
+
 	/**
-	 * (c) 2010 by <a href="http://Wolschon.biz>Wolschon Softwaredesign und Beratung</a>.<br/>
-	 * Project: jgnucashLib-GPL<br/>
-	 * AccountActionWrapper<br/>
-	 * created: 17.11.2010 <br/>
-	 * <br/><br/>
-	 * <b>Wrapper for an {@link AccountAction} that knows about {@link JKMyMoneyViewer#getSelectedAccount()}.</b>
-	 *
-	 * @author <a href="mailto:Marcus@Wolschon.biz">marcus</a>
+	 * Wrapper for an {@link AccountAction} that knows about {@link JKMyMoneyViewer#getSelectedAccount()}.
 	 */
 	private final class AccountActionWrapper implements Action {
 		/**
@@ -143,7 +141,7 @@ public class JKMyMoneyViewer extends JFrame {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(JKMyMoneyViewer.class);
 
-	private KMyMoneyFile myModel;
+	private KMyMoneyFileImpl myModel;
 
 	private javax.swing.JPanel jContentPane = null;
 
@@ -155,11 +153,6 @@ public class JKMyMoneyViewer extends JFrame {
 	 * The currently selected account.
 	 */
 	private KMyMoneyAccount selectedAccount = null;
-
-	/**
-	 * The title of the frame.
-	 */
-	private static final String TITLE = "JKMyMoney Viewer";
 
 	/**
 	 * The split-pane between account-tree and transactions-table.
@@ -473,12 +466,9 @@ public class JKMyMoneyViewer extends JFrame {
 	 * This method initializes this gui.
 	 */
 	protected void initializeGUI() {
-		final int defaultWidth = 750;
-		final int defaultHeight = 600;
-
 		this.setJMenuBar(getJMenuBar());
 		this.setContentPane(getJContentPane());
-		this.setSize(defaultWidth, defaultHeight);
+		this.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		this.setTitle(TITLE);
 		this.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -593,14 +583,35 @@ public class JKMyMoneyViewer extends JFrame {
 	/**
 	 * @return the file we operate on.
 	 */
-	protected KMyMoneyFile getModel() {
+	protected KMyMoneyFileImpl getModel() {
 		return myModel;
 	}
 
+	public void setModel(final KMyMoneyFile model) throws IOException {
+		if (model == null) {
+			throw new IllegalArgumentException(
+					"null not allowed for field this.model");
+		}
+		myModel = new KMyMoneyFileImpl( model );
+		getAccountsTree().setModel(
+				new KMyMoneyAccountsTreeModel(myModel));
+		try {
+			getTaxReportPanel().setBooks(myModel);
+		}
+		catch (Exception e) {
+			LOGGER.warn("cannot initialize (optional) TaxReportPanel", e);
+			getTaxReportPanel().setVisible(false);
+			getJTabbedPane().remove(getTaxReportPanel());
+		}
+		setSelectedAccount(null);
+		setTitle(TITLE);
+
+	}
+	
 	/**
 	 * @param model the file we operate on.
 	 */
-	public void setModel(final KMyMoneyFile model) {
+	public void setModel(final KMyMoneyFileImpl model) {
 		if (model == null) {
 			throw new IllegalArgumentException(
 					"null not allowed for field this.model");

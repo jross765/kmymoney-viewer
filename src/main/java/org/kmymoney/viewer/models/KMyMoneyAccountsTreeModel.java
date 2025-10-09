@@ -20,15 +20,13 @@ import org.slf4j.LoggerFactory;
  * A TreeModel representing the accounts in a KMyMoney-File.
  */
 public class KMyMoneyAccountsTreeModel implements TreeModel {
-    /**
-     * Our logger for debug- and error-ourput.
-     */
+
     private static final Logger LOGGER = LoggerFactory.getLogger(KMyMoneyAccountsTreeModel.class);
 
     /**
      * @param file where we get our data from
      */
-    public KMyMoneyAccountsTreeModel(final KMyMoneyFile file) {
+    public KMyMoneyAccountsTreeModel(final KMyMoneyFileImpl file) {
         super();
         setFile(file);
     }
@@ -51,12 +49,12 @@ public class KMyMoneyAccountsTreeModel implements TreeModel {
         /**
          * where we get our data from.
          */
-        private final KMyMoneyFile file;
+        private final KMyMoneyFileImpl file;
 
         /**
          * @param aFile where we get our data from
          */
-        public KMyMoneyAccountTreeRootEntry(final KMyMoneyFile aFile) {
+        public KMyMoneyAccountTreeRootEntry(final KMyMoneyFileImpl aFile) {
             super(getRootAccount(aFile));
             file = aFile;
         }
@@ -64,7 +62,7 @@ public class KMyMoneyAccountsTreeModel implements TreeModel {
          * @param aFile where we get our data from
          * @return the root-account checked for null
          */
-        private static KMyMoneyAccount getRootAccount(final KMyMoneyFile aFile) {
+        private static KMyMoneyAccount getRootAccount(final KMyMoneyFileImpl aFile) {
             if (aFile == null) {
                 throw new IllegalArgumentException("null file given");
             }
@@ -257,7 +255,7 @@ public class KMyMoneyAccountsTreeModel implements TreeModel {
     /**
      * @param file The kmymoney-file we work on.
      */
-    public void setFile(final KMyMoneyFile file) {
+    public void setFile(final KMyMoneyFileImpl file) {
         if (file == null) {
             throw new IllegalArgumentException(
                     "null not allowed for field this.file");

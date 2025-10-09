@@ -23,7 +23,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTransactionsSplitsTableModel {
 
 	/**
-	 * The account who's transactions we are showing.
+	 * The account the transactions of which we are showing.
 	 */
 	private final KMyMoneyAccount account;
 
@@ -95,7 +95,7 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 	/**
 	 * How to format dates.
 	 */
-	public static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_DATE;
 	/**
 	 * How to format currencies.
 	 */
@@ -103,7 +103,7 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 	/**
 	 * How to format currencies.
 	 */
-	public static final NumberFormat defaultCurrencyFormat = NumberFormat.getCurrencyInstance();
+	public static final NumberFormat DEFAULT_CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
 
 	/**
 	 * Get the TransactionsSplit at the given index.
@@ -126,17 +126,17 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 			updateCurrencyFormat(split);
 
 			switch (columnIndex) {
-				case 0: { //DATE
-					return dateFormat.format(split.getTransaction().getDatePosted());
+				case 0: { // date
+					return split.getTransaction().getDatePostedFormatted();
 				}
-				case 1: { //transaction
+				case 1: { // transaction
 					String desc = split.getTransaction().getMemo();
 					if (desc == null || desc.trim().length() == 0) {
 						return "";
 					}
 					return desc;
 				}
-				case 2: { //description
+				case 2: { // description
 					String desc = split.getMemo();
 					if (desc == null || desc.trim().length() == 0) {
 						return "";
@@ -211,7 +211,7 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 		currencyFormat = NumberFormat.getNumberInstance();
 		try {
 			if (split.getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY) {
-				Currency currency = Currency.getInstance(split.getAccount().getQualifSecCurrID().toString());
+				Currency currency = Currency.getInstance(split.getAccount().getQualifSecCurrID().getCode().toString());
 				currencyFormat = NumberFormat.getCurrencyInstance();
 				currencyFormat.setCurrency(currency);
 			}
