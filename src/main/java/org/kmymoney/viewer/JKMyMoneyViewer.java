@@ -97,7 +97,7 @@ public class JKMyMoneyViewer extends JFrame {
 				return myAccountAction.isEnabled();
 			}
 			catch (Exception e) {
-				LOGGER.error("cannot query isEnabled for AccountAction", e);
+				LOGGER.error("isEnabled: Cannot query isEnabled for AccountAction", e);
 				return false;
 			}
 		}
@@ -124,7 +124,7 @@ public class JKMyMoneyViewer extends JFrame {
 				myAccountAction.actionPerformed(aE);
 			}
 			catch (Exception e) {
-				LOGGER.error("cannot execute AccountAction", e);
+				LOGGER.error("actionPerformed: Cannot execute AccountAction", e);
 			}
 		}
 
@@ -310,10 +310,10 @@ public class JKMyMoneyViewer extends JFrame {
 	protected JTabbedPane getJTabbedPane() {
 		if (myTabbedPane == null) {
 			myTabbedPane = new JTabbedPane();
-			myTabbedPane.addTab("transactions", getTransactionsPanel());
+			myTabbedPane.addTab(Messages_JKMyMoneyViewer.getString("JKMyMoneyViewer.1"), getTransactionsPanel());
 			TaxReportPanel taxReportPanel2 = getTaxReportPanel();
 			if (taxReportPanel2 != null) {
-				myTabbedPane.addTab("taxes", taxReportPanel2);
+				myTabbedPane.addTab(Messages_JKMyMoneyViewer.getString("JKMyMoneyViewer.2"), taxReportPanel2);
 			}
 		}
 		return myTabbedPane;
@@ -343,7 +343,7 @@ public class JKMyMoneyViewer extends JFrame {
 				taxReportPanel = new TaxReportPanel(getModel());
 			}
 			catch (Exception e) {
-				LOGGER.info("The tax-report panel is probably not configured. THIS IS OKAY.", e);
+				LOGGER.info("getTaxReportPanel: The tax-report panel is probably not configured. THIS IS OKAY.", e);
 			}
 		}
 		return taxReportPanel;
@@ -368,7 +368,7 @@ public class JKMyMoneyViewer extends JFrame {
 
 		getTransactionsPanel().setAccount(selectedAccount);
 		if (selectedAccount != null) {
-			LOGGER.debug("account " + selectedAccount.getID()
+			LOGGER.debug("setSelectedAccount: Account " + selectedAccount.getID()
 					+ " = " + selectedAccount.getQualifiedName()
 					+ " selected");
 		}
@@ -396,7 +396,7 @@ public class JKMyMoneyViewer extends JFrame {
 	protected JMenu getFileMenu() {
 		if (myFileMenu == null) {
 			myFileMenu = new JMenu();
-			myFileMenu.setText("File");
+			myFileMenu.setText(Messages_JKMyMoneyViewer.getString("JKMyMoneyViewer.3"));
 			myFileMenu.setMnemonic('f');
 			myFileMenu.add(getFileLoadMenuItem());
 			myFileMenu.add(new JSeparator());
@@ -414,7 +414,7 @@ public class JKMyMoneyViewer extends JFrame {
 	private JMenuItem getFileLoadMenuItem() {
 		if (myFileLoadMenuItem == null) {
 			myFileLoadMenuItem = new JMenuItem();
-			myFileLoadMenuItem.setText("Open...");
+			myFileLoadMenuItem.setText(Messages_JKMyMoneyViewer.getString("JKMyMoneyViewer.4"));
 			myFileLoadMenuItem.setMnemonic('a');
 			myFileLoadMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
@@ -433,7 +433,7 @@ public class JKMyMoneyViewer extends JFrame {
 	private JMenuItem getFileExitMenuItem() {
 		if (myFileExitMenuItem == null) {
 			myFileExitMenuItem = new JMenuItem();
-			myFileExitMenuItem.setText("Exit...");
+			myFileExitMenuItem.setText(Messages_JKMyMoneyViewer.getString("JKMyMoneyViewer.5"));
 			myFileExitMenuItem.setMnemonic('x');
 			myFileExitMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
@@ -517,7 +517,7 @@ public class JKMyMoneyViewer extends JFrame {
 
 			@Override
 			public String getDescription() {
-				return "gnucash files";
+				return "KMyMoney files";
 			}
 		});
 		return jFileChooser;
@@ -564,7 +564,7 @@ public class JKMyMoneyViewer extends JFrame {
 			return true;
 		}
 		catch (Exception e1) {
-			LOGGER.error("cannot load file '" + f.getAbsoluteFile() + "'", e1);
+			LOGGER.error("loadFile: Cannot load file '" + f.getAbsoluteFile() + "'", e1);
 			e1.printStackTrace();
 		}
 		finally {
@@ -589,9 +589,9 @@ public class JKMyMoneyViewer extends JFrame {
 
 	public void setModel(final KMyMoneyFile model) throws IOException {
 		if (model == null) {
-			throw new IllegalArgumentException(
-					"null not allowed for field this.model");
+			throw new IllegalArgumentException("argument <model> is null");
 		}
+
 		myModel = new KMyMoneyFileImpl( model );
 		getAccountsTree().setModel(
 				new KMyMoneyAccountsTreeModel(myModel));
@@ -623,7 +623,7 @@ public class JKMyMoneyViewer extends JFrame {
 			getTaxReportPanel().setBooks(myModel);
 		}
 		catch (Exception e) {
-			LOGGER.warn("cannot initialize (optional) TaxReportPanel", e);
+			LOGGER.warn("setModel: Cannot initialize (optional) TaxReportPanel", e);
 			getTaxReportPanel().setVisible(false);
 			getJTabbedPane().remove(getTaxReportPanel());
 		}
@@ -644,7 +644,7 @@ public class JKMyMoneyViewer extends JFrame {
 				JMenuItem newMenuItem = new JMenuItem(new AccountActionWrapper(accountAction));
 				myAccountTreePopupMenu.add(newMenuItem);
 			}
-			LOGGER.debug("getAccountTreePopupMenu() created menu with " + myAccountTreePopupMenu.getComponentCount() + " entries");
+			LOGGER.debug("getAccountTreePopupMenu: Created menu with " + myAccountTreePopupMenu.getComponentCount() + " entries");
 
 		}
 		int count = myAccountTreePopupMenu.getComponentCount();
@@ -684,7 +684,7 @@ public class JKMyMoneyViewer extends JFrame {
 			mySplitActions.add(new OpenAccountInNewTab(getJTabbedPane()));
 			mySplitActions.add(new OpenAccountInNewWindow());
 		}
-		LOGGER.info("JKMyMoneyViewer has " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions");
+		LOGGER.info("getSplitActions: JKMyMoneyViewer has " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions");
 		return mySplitActions;
 	}
 

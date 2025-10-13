@@ -64,12 +64,14 @@ public class KMyMoneyAccountsTreeModel implements TreeModel {
          */
         private static KMyMoneyAccount getRootAccount(final KMyMoneyFileImpl aFile) {
             if (aFile == null) {
-                throw new IllegalArgumentException("null file given");
+                throw new IllegalArgumentException("argument <aFile> is null");
             }
+            
             KMyMoneyAccount root = aFile.getRootAccount();
             if (root == null) {
                 throw new IllegalArgumentException("root-account is null");
             }
+            
             return root;
 
         }
@@ -119,9 +121,11 @@ public class KMyMoneyAccountsTreeModel implements TreeModel {
          */
         public KMyMoneyAccountTreeEntry(final KMyMoneyAccount anAccount) {
             super();
+            
             if (anAccount == null) {
-                throw new IllegalArgumentException("null account given");
+                throw new IllegalArgumentException("argument <anAccount> is null");
             }
+            
             myAccount = anAccount;
         }
         /**
@@ -257,10 +261,10 @@ public class KMyMoneyAccountsTreeModel implements TreeModel {
      */
     public void setFile(final KMyMoneyFileImpl file) {
         if (file == null) {
-            throw new IllegalArgumentException(
-                    "null not allowed for field this.file");
+            throw new IllegalArgumentException("argument <file> is null");
         }
-       rootEntry = new KMyMoneyAccountTreeRootEntry(file);
+        
+        rootEntry = new KMyMoneyAccountTreeRootEntry(file);
 
         fireTreeStructureChanged(getPathToRoot());
     }
@@ -269,19 +273,18 @@ public class KMyMoneyAccountsTreeModel implements TreeModel {
      * {@inheritDoc}
      */
     protected TreePath getPathToRoot() {
-     return new TreePath(getRoot());
+     	return new TreePath(getRoot());
     }
 
     /**
      * @param path the path to inform our {@link TreeModelListener}s about.
      */
     protected void fireTreeStructureChanged(final TreePath path) {
-     TreeModelEvent evt = new TreeModelEvent(this, path);
+		TreeModelEvent evt = new TreeModelEvent( this, path );
 
-     for (TreeModelListener listener : listeners) {
-        listener.treeStructureChanged(evt);
-
-    }
+		for ( TreeModelListener listener : listeners ) {
+			listener.treeStructureChanged( evt );
+		}
     }
 
 }

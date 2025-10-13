@@ -35,6 +35,8 @@ public class ShowTransactionPanel extends JPanel {
 
 	static final Logger LOGGER = LoggerFactory.getLogger(ShowTransactionPanel.class);
 
+	private static final double FACTOR_COL_WIDTH_ACTION = 1.5;
+
 	/**
 	 * for serializing.
 	 */
@@ -125,9 +127,9 @@ public class ShowTransactionPanel extends JPanel {
 				menu.add(newMenuItem);
 			}
 
-			LOGGER.info("showing popup-menu with " + splitActions.size() + " split-actions");
+			LOGGER.info("getCellPopupMenu: Showing popup menu with " + splitActions.size() + " split-actions"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			LOGGER.info("no split found, not showing popup-menu");
+			LOGGER.info("getCellPopupMenu: No split found, not showing popup menu"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return menu;
 	}
@@ -206,7 +208,7 @@ public class ShowTransactionPanel extends JPanel {
 	 */
 	protected void setModel(final SingleTransactionTableModel aModel) {
 		if (aModel == null) {
-			throw new IllegalArgumentException("null 'aModel' given!");
+			throw new IllegalArgumentException("argument <aModel> is null"); //$NON-NLS-1$
 		}
 
 		Object old = model;
@@ -222,25 +224,25 @@ public class ShowTransactionPanel extends JPanel {
 		// BEGIN col widths
 		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(transactionTable.getFont());
 
-		transactionTable.getColumn("date").setPreferredWidth(
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setPreferredWidth( //$NON-NLS-1$
 				SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DATE_FORMAT.format(LocalDateTime.now())) + Const.TABLE_COL_EXTRA_WIDTH);
 
 		int currencyWidthDefault = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_SMALL));
 		int currencyWidthMax     = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_BIG));
 
-		transactionTable.getColumn("+").setPreferredWidth(currencyWidthDefault);
-		transactionTable.getColumn("-").setPreferredWidth(currencyWidthDefault);
-		transactionTable.getColumn("action").setPreferredWidth(SwingUtilities.computeStringWidth(metrics, "VERKAUF"));
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setPreferredWidth(SwingUtilities.computeStringWidth(metrics, KMyMoneyTransactionSplit.Action.REMOVE_SHARES.toString())); //$NON-NLS-1$
 
-		transactionTable.getColumn("date").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
-		transactionTable.getColumn("+").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
-		transactionTable.getColumn("-").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
-		transactionTable.getColumn("action").setMinWidth(Const.TABLE_COL_MIN_WIDTH);
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
 
-		transactionTable.getColumn("date").setMaxWidth(Const.TABLE_COL_MAX_WIDTH);
-		transactionTable.getColumn("+").setMaxWidth(currencyWidthMax);
-		transactionTable.getColumn("-").setMaxWidth(currencyWidthMax);
-		transactionTable.getColumn("action").setMaxWidth(SwingUtilities.computeStringWidth(metrics, "VERKAUF          "));
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setMaxWidth(Const.TABLE_COL_MAX_WIDTH); //$NON-NLS-1$
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setMaxWidth(currencyWidthMax); //$NON-NLS-1$
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setMaxWidth(currencyWidthMax); //$NON-NLS-1$
+		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setMaxWidth((int) ( SwingUtilities.computeStringWidth(metrics, KMyMoneyTransactionSplit.Action.REINVEST_DIVIDEND.toString()) * FACTOR_COL_WIDTH_ACTION ) ); //$NON-NLS-1$
 		// END col widths
 		// ---
 	}
@@ -281,11 +283,11 @@ public class ShowTransactionPanel extends JPanel {
 								getCellPopupMenu(row).show((JComponent) aE.getSource(),
 										aE.getX(), aE.getY());
 							} else {
-								LOGGER.info("no split-row below mouse found, not showing popup-menu");
+								LOGGER.info("getTransactionTable.mousePressed: No split-row below mouse found, not showing popup-menu"); //$NON-NLS-1$
 							}
 						}
 					} catch (Exception e) {
-						LOGGER.error("error showing popup-menu", e);
+						LOGGER.error("getTransactionTable.mousePressed: Error showing popup menu", e); //$NON-NLS-1$
 					}
 				}
 
@@ -301,11 +303,11 @@ public class ShowTransactionPanel extends JPanel {
 								getCellPopupMenu(row).show((JComponent) aE.getSource(),
 										aE.getX(), aE.getY());
 							} else {
-								LOGGER.info("no split-row below mouse found, not showing popup-menu");
+								LOGGER.info("getTransactionTable.mouseReleased: No split-row below mouse found, not showing popup-menu"); //$NON-NLS-1$
 							}
 						}
 					} catch (Exception e) {
-						LOGGER.error("error showing popup-menu", e);
+						LOGGER.error("getTransactionTable.mouseReleased: Error showing popup-menu", e); //$NON-NLS-1$
 					}
 				}
 			});
@@ -321,14 +323,14 @@ public class ShowTransactionPanel extends JPanel {
 	 */
 	public void setSplitActions(final Collection<TransactionSplitAction> aSplitActions) {
 		mySplitActions = aSplitActions;
-		LOGGER.info("ShowTransactionPanel is given " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions");
+		LOGGER.info("setSplitActions: ShowTransactionPanel is given " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
 	 * @return the splitActions
 	 */
 	protected Collection<TransactionSplitAction> getSplitActions() {
-		LOGGER.info("ShowTransactionPanel has " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions");
+		LOGGER.info("getSplitActions: howTransactionPanel has " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return mySplitActions;
 	}
 }

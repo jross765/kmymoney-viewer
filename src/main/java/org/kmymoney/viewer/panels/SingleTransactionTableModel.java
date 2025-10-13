@@ -22,45 +22,44 @@ import org.kmymoney.viewer.models.KMyMoneyTransactionsSplitsTableModel;
  */
 public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTableModel {
 
-	/**
-	 * The transaction that we are showing.
-	 */
+	// The transaction that we are showing
 	private KMyMoneyTransaction myTransaction;
 
-	/**
-	 * The columns we display.
-	 */
-	private final String[] defaultColumnNames = new String[] {"date", "action", "description", "account", "+", "-"};
+	// The columns we display
+	private final String[] defaultColumnNames = new String[] {
+				Messages_SingleTransactionTableModel.getString("SingleTransactionTableModel.1"), 
+				Messages_SingleTransactionTableModel.getString("SingleTransactionTableModel.2"), 
+				Messages_SingleTransactionTableModel.getString("SingleTransactionTableModel.3"), 
+				Messages_SingleTransactionTableModel.getString("SingleTransactionTableModel.4"), 
+				Messages_SingleTransactionTableModel.getString("SingleTransactionTableModel.5"), 
+				Messages_SingleTransactionTableModel.getString("SingleTransactionTableModel.6"), 
+			};
 
-	/**
-	 * How to format dates.
-	 */
+	// How to format dates
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern(Const.STANDARD_DATE_FORMAT);
 
-	/**
-	 * How to format currencies.
-	 */
+	// How to format currencies
 	public static final NumberFormat DEFAULT_CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
 
 	/**
-	 * @param aTransaction the transaction we are showing
+	 * @param trx the transaction we are showing
 	 */
-	public SingleTransactionTableModel(final KMyMoneyTransaction aTransaction) {
+	public SingleTransactionTableModel(final KMyMoneyTransaction trx) {
 		super();
-		myTransaction = aTransaction;
+		myTransaction = trx;
 	}
 
 	/**
 	 * @return true if more then 1 currency is involved
 	 */
 	public boolean isMultiCurrency() {
-		if (getTransaction() == null) {
+		if ( getTransaction() == null ) {
 			return false;
 		}
 
-		for (KMyMoneyTransactionSplit split : getTransaction().getSplits()) {
-			if (split.getAccount().getQualifSecCurrID().getType() != getTransaction().getQualifSecCurrID().getType()
-					|| !split.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID().toString())) {
+		for ( KMyMoneyTransactionSplit split : getTransaction().getSplits() ) {
+			if ( split.getAccount().getQualifSecCurrID().getType() != getTransaction().getQualifSecCurrID().getType() || 
+				 ! split.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID().toString()) ) {
 				return true;
 			}
 		}
@@ -84,19 +83,20 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 	}
 
 	/**
-	 * @param aTransaction The transaction to set.
+	 * @param trx The transaction to set.
 	 * @see #myTransaction
 	 */
-	public void setTransaction(final KMyMoneyTransaction aTransaction) {
-		if (aTransaction == null) {
-			throw new IllegalArgumentException("null 'aTransaction' given!");
+	public void setTransaction(final KMyMoneyTransaction trx) {
+		if ( trx == null ) {
+			throw new IllegalArgumentException("argument <trx> is null");
 		}
 
 		Object old = myTransaction;
-		if (old == aTransaction) {
+		if ( old == trx ) {
 			return; // nothing has changed
 		}
-		myTransaction = aTransaction;
+		
+		myTransaction = trx;
 	}
 
 	/**
@@ -111,11 +111,11 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 	 */
 	public List<KMyMoneyTransactionSplit> getTransactionSplits() {
 		KMyMoneyTransaction transaction = getTransaction();
-		if (transaction == null) {
+		if ( transaction == null ) {
 			return new LinkedList<KMyMoneyTransactionSplit>();
 		}
+		
 		return new ArrayList<KMyMoneyTransactionSplit>(transaction.getSplits());
-
 	}
 
 	/**
@@ -133,9 +133,8 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 	 * @see javax.swing.table.TableModel#getRowCount()
 	 */
 	public int getRowCount() {
-
 		KMyMoneyTransaction transaction = getTransaction();
-		if (transaction == null) {
+		if ( transaction == null ) {
 			return 0;
 		}
 		return 1 + getTransactionSplits().size();
@@ -157,7 +156,7 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
 	public Object getValueAt(final int rowIndex, final int columnIndex) {
-		// "date", "action", "description", "account", "+", "-"};
+		// "date", "action", "description", "account", "+", "-"
 		try {
 			if (rowIndex == 0) {
 				// show data of transaction
@@ -180,7 +179,7 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 					}
 
 					default:
-						throw new IllegalArgumentException("illegal columnIndex " + columnIndex);
+						throw new IllegalArgumentException("illegal column index " + columnIndex);
 				}
 			}
 
@@ -192,14 +191,15 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 				}
 				case 1: { // action
 					Action action = split.getAction();
-					if (action == null) {
+					if ( action == null ) {
 						return "";
 					}
 					return action;
 				}
 				case 2: { // description
 					String desc = split.getMemo();
-					if (desc == null || desc.trim().length() == 0) {
+					if ( desc == null || 
+						 desc.trim().length() == 0 ) {
 						return "";
 					}
 					return desc;
@@ -208,9 +208,9 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 					return split.getAccount().getQualifiedName();
 				}
 				case 4: { // +
-					if (split.getValue().isPositive()) {
-						if (split.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType()
-								&& split.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID())) {
+					if ( split.getValue().isPositive() ) {
+						if ( split.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType() && 
+							 split.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID()) ) {
 							return split.getValueFormatted();
 						}
 						return split.getValueFormatted() + " (" + split.getSharesFormatted() + ")";
@@ -219,9 +219,9 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 					}
 				}
 				case 5: { // -
-					if (!split.getValue().isPositive()) {
-						if (split.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType()
-								&& split.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID())) {
+					if ( ! split.getValue().isPositive() ) {
+						if ( split.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType() && 
+							 split.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID()) ) {
 							return split.getValueFormatted();
 						}
 						return split.getValueFormatted() + " (" + split.getSharesFormatted() + ")";
@@ -262,7 +262,8 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 	 */
 	private Object getTransactionDescription() {
 		String desc = getTransaction().getMemo();
-		if (desc == null || desc.trim().length() == 0) {
+		if ( desc == null || 
+			 desc.trim().length() == 0 ) {
 			return "";
 		}
 		return desc;

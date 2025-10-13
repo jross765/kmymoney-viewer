@@ -24,10 +24,14 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
     private final List<? extends KMyMoneyTransactionSplit> mySplits;
 
 
-    /**
-     * The columns we display.
-     */
-    private final String[] defaultColumnNames = new String[] {"date", "transaction", "description", "+", "-"};
+    // The columns we display.
+    private final String[] defaultColumnNames = new String[] {
+    			Messages_KMyMoneySimpleAccountTransactionSplitsTableModel.getString("KMyMoneySimpleAccountTransactionSplitsTableModel.1"), 
+    			Messages_KMyMoneySimpleAccountTransactionSplitsTableModel.getString("KMyMoneySimpleAccountTransactionSplitsTableModel.2"), 
+    			Messages_KMyMoneySimpleAccountTransactionSplitsTableModel.getString("KMyMoneySimpleAccountTransactionSplitsTableModel.3"), 
+    			Messages_KMyMoneySimpleAccountTransactionSplitsTableModel.getString("KMyMoneySimpleAccountTransactionSplitsTableModel.4"), 
+    			Messages_KMyMoneySimpleAccountTransactionSplitsTableModel.getString("KMyMoneySimpleAccountTransactionSplitsTableModel.5")
+    		};
 
     /**
      * @param java.util.List<? extends KMyMoneyTransactionSplit> the splits to display.
@@ -57,7 +61,6 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
      * {@inheritDoc}
      */
     public int getRowCount() {
-
         List<? extends KMyMoneyTransactionSplit> transactionSplits = getTransactionSplits();
         if (transactionSplits == null) {
             return 0;
@@ -69,9 +72,10 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
      * @return the splits that affect this account.
      */
     public List<? extends KMyMoneyTransactionSplit> getTransactionSplits() {
-        if (mySplits == null) {
+        if ( mySplits == null ) {
             return new LinkedList<KMyMoneyTransactionSplit>();
         }
+        
         return mySplits;
     }
 
@@ -90,17 +94,13 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
     }
 
 
-    /**
-     * How to format dates.
-     */
+    // How to format dates.
     public static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
-    /**
-     * How to format currencies.
-     */
+    
+    // How to format currencies.
     private  NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-    /**
-     * How to format currencies.
-     */
+    
+    // How to format currencies.
     public static final NumberFormat defaultCurrencyFormat = NumberFormat.getCurrencyInstance();
 
 
@@ -130,20 +130,22 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
             }
             case 1: { // transaction
                 String desc = split.getTransaction().getMemo();
-                if (desc == null || desc.trim().length() == 0) {
+                if ( desc == null ||
+                	 desc.trim().length() == 0 ) {
                     return "";
                 }
                 return desc;
             }
             case 2: { // description
                 String desc = split.getMemo();
-                if (desc == null || desc.trim().length() == 0) {
+                if ( desc == null ||
+                	 desc.trim().length() == 0 ) {
                     return "";
                 }
                 return desc;
             }
             case 3: { // +
-              if (split.getShares().isPositive()) {
+              if ( split.getShares().isPositive() ) {
 //                  //T O D O: use default-currency here
 //                  if (account != null && !account.getCurrencyID().equals("EUR")) {
 //                      return split.getValueFormatet();
@@ -154,7 +156,7 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
             }
             }
             case 4: { // -
-                if (!split.getShares().isPositive()) {
+                if ( ! split.getShares().isPositive() ) {
 //                    if (account != null && !account.getCurrencyID().equals("EUR")) {
 //                        return split.getValueFormatet();
 //                    }
@@ -202,7 +204,7 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
     private void updateCurrencyFormat(final KMyMoneyTransactionSplit split) {
         currencyFormat = NumberFormat.getNumberInstance();
         try {
-            if (split.getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY) {
+            if ( split.getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
                 Currency currency = Currency.getInstance(split.getAccount().getQualifSecCurrID().toString());
                 currencyFormat = NumberFormat.getCurrencyInstance();
                 currencyFormat.setCurrency(currency);
@@ -255,7 +257,6 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
      */
     public void removeTableModelListener(final TableModelListener l) {
         myTableModelListeners.remove(l);
-
     }
 
 }
