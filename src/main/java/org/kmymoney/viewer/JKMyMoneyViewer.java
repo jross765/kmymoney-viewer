@@ -49,7 +49,6 @@ import org.kmymoney.viewer.actions.OpenAccountInNewWindow;
 import org.kmymoney.viewer.actions.TransactionSplitAction;
 import org.kmymoney.viewer.models.KMyMoneyAccountsTreeModel;
 import org.kmymoney.viewer.models.KMyMoneyFileImpl;
-import org.kmymoney.viewer.panels.TaxReportPanel;
 import org.kmymoney.viewer.panels.TransactionsPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,7 +168,6 @@ public class JKMyMoneyViewer extends JFrame {
 	 */
 	private JTabbedPane myTabbedPane = null;
 	private TransactionsPanel transactionsPanel = null;
-	private TaxReportPanel taxReportPanel = null;
 	private JMenuBar jJMenuBar = null;
 	/**
 	 * The File-Menu.
@@ -311,10 +309,6 @@ public class JKMyMoneyViewer extends JFrame {
 		if (myTabbedPane == null) {
 			myTabbedPane = new JTabbedPane();
 			myTabbedPane.addTab(Messages_JKMyMoneyViewer.getString("JKMyMoneyViewer.1"), getTransactionsPanel());
-			TaxReportPanel taxReportPanel2 = getTaxReportPanel();
-			if (taxReportPanel2 != null) {
-				myTabbedPane.addTab(Messages_JKMyMoneyViewer.getString("JKMyMoneyViewer.2"), taxReportPanel2);
-			}
 		}
 		return myTabbedPane;
 	}
@@ -330,23 +324,6 @@ public class JKMyMoneyViewer extends JFrame {
 			transactionsPanel.setSplitActions(getSplitActions());
 		}
 		return transactionsPanel;
-	}
-
-	/**
-	 * This method initializes transactionsPanel.
-	 *
-	 * @return javax.swing.JTable
-	 */
-	protected TaxReportPanel getTaxReportPanel() {
-		if (taxReportPanel == null) {
-			try {
-				taxReportPanel = new TaxReportPanel(getModel());
-			}
-			catch (Exception e) {
-				LOGGER.info("getTaxReportPanel: The tax-report panel is probably not configured. THIS IS OKAY.", e);
-			}
-		}
-		return taxReportPanel;
 	}
 
 	/**
@@ -588,48 +565,28 @@ public class JKMyMoneyViewer extends JFrame {
 	}
 
 	public void setModel(final KMyMoneyFile model) throws IOException {
-		if (model == null) {
+		if ( model == null ) {
 			throw new IllegalArgumentException("argument <model> is null");
 		}
 
 		myModel = new KMyMoneyFileImpl( model );
-		getAccountsTree().setModel(
-				new KMyMoneyAccountsTreeModel(myModel));
-		try {
-			getTaxReportPanel().setBooks(myModel);
-		}
-		catch (Exception e) {
-			LOGGER.warn("cannot initialize (optional) TaxReportPanel", e);
-			getTaxReportPanel().setVisible(false);
-			getJTabbedPane().remove(getTaxReportPanel());
-		}
+		getAccountsTree().setModel(new KMyMoneyAccountsTreeModel(myModel));
 		setSelectedAccount(null);
 		setTitle(TITLE);
-
 	}
 	
 	/**
 	 * @param model the file we operate on.
 	 */
 	public void setModel(final KMyMoneyFileImpl model) {
-		if (model == null) {
-			throw new IllegalArgumentException(
-					"null not allowed for field this.model");
+		if ( model == null ) {
+			throw new IllegalArgumentException("argument <model> is null");
 		}
+
 		myModel = model;
-		getAccountsTree().setModel(
-				new KMyMoneyAccountsTreeModel(myModel));
-		try {
-			getTaxReportPanel().setBooks(myModel);
-		}
-		catch (Exception e) {
-			LOGGER.warn("setModel: Cannot initialize (optional) TaxReportPanel", e);
-			getTaxReportPanel().setVisible(false);
-			getJTabbedPane().remove(getTaxReportPanel());
-		}
+		getAccountsTree().setModel(new KMyMoneyAccountsTreeModel(myModel));
 		setSelectedAccount(null);
 		setTitle(TITLE);
-
 	}
 
 	/**
@@ -725,4 +682,4 @@ public class JKMyMoneyViewer extends JFrame {
 		tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, tab);
 	}
 
-} //  @jve:visual-info  decl-index=0 visual-constraint="20,27"
+}
