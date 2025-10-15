@@ -22,130 +22,86 @@ import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.viewer.panels.TransactionsPanel;
 
-/**
+/*
  * Action to open an account in a new tab.
  */
 public class OpenAccountInNewTab implements AccountAction,
 		org.kmymoney.viewer.actions.TransactionSplitAction {
 
-    /**
-     * The account we open.
-     */
+    // The account we open
     private KMyMoneyAccount myAccount;
 
-    /**
-     * @see #getValue(String)
-     */
     private final Map<String, Object> myAddedTags = new HashMap<String, Object>();
 
-    /**
-     * @see #addPropertyChangeListener(PropertyChangeListener)
-     */
     private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
 
-    /**
-     * Optional the transaction to highlight.
-     */
+    // Optional: the transaction to highlight.
     private KMyMoneyTransaction myTransaction;
 
-    /**
-     * The TabbedPane to open in.
-     */
+    // The tabbed pane to open the account in
     private final JTabbedPane myTabbedPane;
 
-    /**
+    /*
      * Initialize.
-     * @param aTabbedPane The TabbedPane to open in.
      */
     public OpenAccountInNewTab(final JTabbedPane aTabbedPane) {
-        this.putValue(Action.NAME, "Open Account in new Tab");
-        this.putValue(Action.LONG_DESCRIPTION, "Open the given Account in new Tab.");
-        this.putValue(Action.SHORT_DESCRIPTION, "Open Account in new Tab.");
+        this.putValue(Action.NAME, Messages_OpenAccountInNewTab.getString("OpenAccountInNewTab.1"));
+        this.putValue(Action.LONG_DESCRIPTION, Messages_OpenAccountInNewTab.getString("OpenAccountInNewTab.2"));
+        this.putValue(Action.SHORT_DESCRIPTION, Messages_OpenAccountInNewTab.getString("OpenAccountInNewTab.3"));
         myTabbedPane = aTabbedPane;
     }
-    /**
-     * @param aSplit the split to show the account of.
-     * @param aTabbedPane The TabbedPane to open in.
-     */
+
     public OpenAccountInNewTab(final JTabbedPane aTabbedPane, final KMyMoneyTransactionSplit aSplit) {
         this(aTabbedPane);
         setSplit(aSplit);
     }
-    /**
-     * @param anAccount the account to show.
-     * @param aTabbedPane The TabbedPane to open in.
-     */
+
     public OpenAccountInNewTab(final JTabbedPane aTabbedPane, final KMyMoneyAccount anAccount) {
         this(aTabbedPane);
         setAccount(anAccount);
     }
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void setAccount(final KMyMoneyAccount anAccount) {
         myAccount = anAccount;
         myTransaction = null;
     }
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void setSplit(final KMyMoneyTransactionSplit aSplit) {
         myAccount = aSplit.getAccount();
         myTransaction = aSplit.getTransaction();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void addPropertyChangeListener(final PropertyChangeListener aListener) {
         myPropertyChangeSupport.addPropertyChangeListener(aListener);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object getValue(final String aKey) {
         return myAddedTags.get(aKey);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isEnabled() {
         return getAccount() != null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void putValue(final String aKey, final Object aValue) {
         myAddedTags.put(aKey, aValue);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void removePropertyChangeListener(final PropertyChangeListener aListener) {
         myPropertyChangeSupport.removePropertyChangeListener(aListener);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setEnabled(final boolean aB) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void actionPerformed(final ActionEvent aE) {
         final TransactionsPanel newTransactionsPanel = new TransactionsPanel();
@@ -156,10 +112,7 @@ public class OpenAccountInNewTab implements AccountAction,
         String tabName = getAccount().getName();
         addTab(tabName, newTransactionsPanel);
     }
-    /**
-     * @param tabName the label of the tab
-     * @param tabContent the content
-     */
+
     private void addTab(final String tabName, final JComponent tabContent) {
 
         myTabbedPane.addTab(null, tabContent);
@@ -181,12 +134,9 @@ public class OpenAccountInNewTab implements AccountAction,
         tab.add(closeButton, BorderLayout.EAST);
         myTabbedPane.setTabComponentAt(myTabbedPane.getTabCount() - 1, tab);
     }
-    /**
-     * @return the account
-     */
+
     protected KMyMoneyAccount getAccount() {
         return myAccount;
     }
-
 
 }

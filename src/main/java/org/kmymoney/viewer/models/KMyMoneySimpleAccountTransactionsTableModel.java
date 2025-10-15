@@ -22,18 +22,27 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
  */
 public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTransactionsSplitsTableModel {
 
+	enum TableCols {
+		DATE,
+		TRANSACTION,
+		DESCRIPTION,
+		PLUS,
+		MINUS,
+		BALANCE
+	}
+
 	// The account the transactions of which we are showing.
 	private final KMyMoneyAccount account;
 
 	// The columns we display.
 	private final String[] defaultColumnNames = new String[] {
-				Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.1"), 
-				Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.2"), 
-				Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.3"), 
-				Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.4"), 
-				Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.5"), 
-				Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.6")
-			};
+			Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.1"), 
+			Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.2"), 
+			Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.3"), 
+			Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.4"), 
+			Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.5"), 
+			Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.6")
+		};
 
 	/**
 	 * @param anAccount the account the splits of which to display.
@@ -123,59 +132,49 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 
 			updateCurrencyFormat(split);
 
-			switch (columnIndex) {
-				case 0: { // date
-					return split.getTransaction().getDatePostedFormatted();
+			if ( columnIndex == TableCols.DATE.ordinal() ) {
+				return split.getTransaction().getDatePostedFormatted();
+			} else if ( columnIndex == TableCols.TRANSACTION.ordinal() ) {
+				String desc = split.getTransaction().getMemo();
+				if (desc == null || desc.trim().length() == 0) {
+					return "";
 				}
-				case 1: { // transaction
-					String desc = split.getTransaction().getMemo();
-					if (desc == null || desc.trim().length() == 0) {
-						return "";
-					}
-					return desc;
+				return desc;
+			} else if ( columnIndex == TableCols.DESCRIPTION.ordinal() ) {
+				String desc = split.getMemo();
+				if (desc == null || desc.trim().length() == 0) {
+					return "";
 				}
-				case 2: { // description
-					String desc = split.getMemo();
-					if (desc == null || desc.trim().length() == 0) {
-						return "";
-					}
-					return desc;
+				return desc;
+			} else if ( columnIndex == TableCols.PLUS.ordinal() ) {
+				if ( split.getShares().isPositive() ) {
+					//                  //T O D O: use default-currency here
+					//                  if (account != null && !account.getCurrencyID().equals("EUR")) {
+					//                      return split.getValueFormatet();
+					//                  }
+					return currencyFormat.format(split.getShares());
+				} else {
+					return "";
 				}
-				case 3: { // +
-					if ( split.getShares().isPositive() ) {
-						//                  //T O D O: use default-currency here
-						//                  if (account != null && !account.getCurrencyID().equals("EUR")) {
-						//                      return split.getValueFormatet();
-						//                  }
-						return currencyFormat.format(split.getShares());
-					} else {
-						return "";
-					}
+			} else if ( columnIndex == TableCols.MINUS.ordinal() ) {
+				if ( ! split.getShares().isPositive() ) {
+					//                    if (account != null && !account.getCurrencyID().equals("EUR")) {
+					//                        return split.getValueFormatet();
+					//                    }
+					return currencyFormat.format(split.getShares());
+				} else {
+					return "";
 				}
-				case 4: { // -
-					if ( ! split.getShares().isPositive() ) {
-						//                    if (account != null && !account.getCurrencyID().equals("EUR")) {
-						//                        return split.getValueFormatet();
-						//                    }
-						return currencyFormat.format(split.getShares());
-					} else {
-						return "";
-					}
+			} else if ( columnIndex == TableCols.BALANCE.ordinal() ) {
+				if ( account != null ) {
+					return currencyFormat.format(account.getBalance(split));
+				} else {
+					return currencyFormat.format(split.getAccount().getBalance(split));
 				}
-				case 5: { // balance
-					if ( account != null ) {
-						return currencyFormat.format(account.getBalance(split));
-					} else {
-						return currencyFormat.format(split.getAccount().getBalance(split));
-					}
-				}
-				default:
-					throw new IllegalArgumentException("illegal column index " + columnIndex);
+			} else {
+				throw new IllegalArgumentException("illegal column index " + columnIndex);
 			}
-
-		}
-		catch (Exception x) {
-
+		} catch (Exception x) {
 			String message = "Internal Error in "
 					+ getClass().getName() + ":getValueAt(int rowIndex="
 					+ rowIndex
@@ -209,7 +208,7 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 		currencyFormat = NumberFormat.getNumberInstance();
 		try {
 			if ( split.getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-				Currency currency = Currency.getInstance(split.getAccount().getQualifSecCurrID().getCode().toString());
+				Currency currency = Currency.getInstance(split.getAccount().getQualifSecCurrID().getCode());
 				currencyFormat = NumberFormat.getCurrencyInstance();
 				currencyFormat.setCurrency(currency);
 			}
@@ -224,14 +223,14 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 	 * {@inheritDoc}
 	 */
 	public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
-
+		// ::EMPTY
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public String getColumnName(final int columnIndex) {
-		return defaultColumnNames[columnIndex]; //TODO: l10n
+		return defaultColumnNames[columnIndex];
 	}
 
 	/**

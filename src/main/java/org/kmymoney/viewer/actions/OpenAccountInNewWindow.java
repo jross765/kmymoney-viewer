@@ -15,121 +15,82 @@ import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.viewer.panels.TransactionsPanel;
 
-/**
+/*
  * Action to open an account in a new tab.
  */
 public class OpenAccountInNewWindow implements AccountAction,
         TransactionSplitAction {
 
-    /**
-     * The account we open.
-     */
+    // The account we open.
     private KMyMoneyAccount myAccount;
 
-    /**
-     * @see #getValue(String)
-     */
     private final Map<String, Object> myAddedTags = new HashMap<String, Object>();
 
-    /**
-     * @see #addPropertyChangeListener(PropertyChangeListener)
-     */
     private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
 
-    /**
-     * Optional the transaction to highlight.
-     */
+    // Optional: the transaction to highlight
     private KMyMoneyTransaction myTransaction;
 
-    /**
+    /*
      * Initialize.
      */
     public OpenAccountInNewWindow() {
-        this.putValue(Action.NAME, "Open Account in new Window");
-        this.putValue(Action.LONG_DESCRIPTION, "Open the given Account in new Window.");
-        this.putValue(Action.SHORT_DESCRIPTION, "Open Account in new Window.");
+        this.putValue(Action.NAME, Messages_OpenAccountInNewWindow.getString("OpenAccountInNewWindow.1"));
+        this.putValue(Action.LONG_DESCRIPTION, Messages_OpenAccountInNewWindow.getString("OpenAccountInNewWindow.2"));
+        this.putValue(Action.SHORT_DESCRIPTION, Messages_OpenAccountInNewWindow.getString("OpenAccountInNewWindow.3"));
     }
-    /**
-     * @param aSplit the split to show the account of.
-     */
+
     public OpenAccountInNewWindow(final KMyMoneyTransactionSplit aSplit) {
         this();
         setSplit(aSplit);
     }
-    /**
-     * @param anAccount the account to show.
-     */
+
     public OpenAccountInNewWindow(final KMyMoneyAccount anAccount) {
         this();
         setAccount(anAccount);
     }
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void setAccount(final KMyMoneyAccount anAccount) {
         myAccount = anAccount;
         myTransaction = null;
     }
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void setSplit(final KMyMoneyTransactionSplit aSplit) {
         myAccount = aSplit.getAccount();
         myTransaction = aSplit.getTransaction();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void addPropertyChangeListener(final PropertyChangeListener aListener) {
         myPropertyChangeSupport.addPropertyChangeListener(aListener);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object getValue(final String aKey) {
         return myAddedTags.get(aKey);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isEnabled() {
         return myAccount != null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void putValue(final String aKey, final Object aValue) {
         myAddedTags.put(aKey, aValue);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void removePropertyChangeListener(final PropertyChangeListener aListener) {
         myPropertyChangeSupport.removePropertyChangeListener(aListener);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setEnabled(final boolean aB) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void actionPerformed(final ActionEvent aE) {
                 TransactionsPanel newPanel = new TransactionsPanel();
@@ -143,6 +104,5 @@ public class OpenAccountInNewWindow implements AccountAction,
         newFrame.pack();
         newFrame.setVisible(true);
     }
-
 
 }

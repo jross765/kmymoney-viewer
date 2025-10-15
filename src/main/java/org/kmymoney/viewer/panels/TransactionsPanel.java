@@ -62,7 +62,7 @@ public class TransactionsPanel extends JPanel {
 	private JTable transactionTable;
 
 	// A panel holding ${@link #selectionSummaryLabel}}
-	private JPanel selectionSummaryPanel = null;  //  @jve:decl-index=0:visual-constraint="159,213"
+	private JPanel selectionSummaryPanel = null;
 
 	// A label showing summary-information about the selected transactions.
 	private JLabel selectionSummaryLabel = null;

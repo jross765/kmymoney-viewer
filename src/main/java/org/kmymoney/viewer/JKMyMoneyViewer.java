@@ -146,7 +146,7 @@ public class JKMyMoneyViewer extends JFrame {
 
 	private javax.swing.JScrollPane treeScrollPane = null;
 
-	private javax.swing.JFileChooser jFileChooser = null; //  @jve:visual-info  decl-index=0 visual-constraint="582,36"
+	private javax.swing.JFileChooser jFileChooser = null;
 
 	/**
 	 * The currently selected account.
@@ -269,7 +269,7 @@ public class JKMyMoneyViewer extends JFrame {
 					}
 				}
 
-				/** show popup if mousePressed is a popupTrigger on this platform.
+				/** show pop-up if mousePressed is a popupTrigger on this platform.
 				 * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
 				 */
 				@Override
@@ -429,7 +429,7 @@ public class JKMyMoneyViewer extends JFrame {
 	 */
 	private javax.swing.JPanel getJContentPane() {
 		if (jContentPane == null) {
-			final int border = 5;
+			final int border = Const.PANE_BORDER_DEFAULT;
 			jContentPane = new javax.swing.JPanel();
 			jContentPane.setLayout(new java.awt.BorderLayout());
 			jContentPane.setBorder(javax.swing.BorderFactory.createEmptyBorder(
@@ -465,7 +465,7 @@ public class JKMyMoneyViewer extends JFrame {
 	 */
 	private javax.swing.JScrollPane getTreeScrollPane() {
 		if (treeScrollPane == null) {
-			final int defaultWidth = 400;
+			final int defaultWidth = Const.SCROLL_PANE_WIDTH_DEFAULT;
 			treeScrollPane = new JScrollPane();
 			treeScrollPane.setViewportView(getAccountsTree());
 			treeScrollPane.setPreferredSize(new Dimension(defaultWidth, Integer.MAX_VALUE));
@@ -494,7 +494,7 @@ public class JKMyMoneyViewer extends JFrame {
 
 			@Override
 			public String getDescription() {
-				return "KMyMoney files";
+				return Messages_JKMyMoneyViewer.getString("JKMyMoneyViewer.8");
 			}
 		});
 		return jFileChooser;
@@ -522,7 +522,10 @@ public class JKMyMoneyViewer extends JFrame {
 				return false;
 			}
 			if (!f.exists()) {
-				JOptionPane.showMessageDialog(JKMyMoneyViewer.this, "File does not exist", "missing file", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(JKMyMoneyViewer.this, 
+											  Messages_JKMyMoneyViewer.getString("JKMyMoneyViewer.6"), 
+											  Messages_JKMyMoneyViewer.getString("JKMyMoneyViewer.7"), 
+											  JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 			return loadFile(f);
@@ -593,10 +596,10 @@ public class JKMyMoneyViewer extends JFrame {
 	 * @return the accountTreePopupMenu
 	 */
 	protected JPopupMenu getAccountTreePopupMenu() {
-		if (myAccountTreePopupMenu == null) {
+		if ( myAccountTreePopupMenu == null ) {
 			myAccountTreePopupMenu = new JPopupMenu();
 			Collection<AccountAction> accountActions = getAccountActions();
-			for (AccountAction accountAction2 : accountActions) {
+			for ( AccountAction accountAction2 : accountActions ) {
 				final AccountAction accountAction = accountAction2;
 				JMenuItem newMenuItem = new JMenuItem(new AccountActionWrapper(accountAction));
 				myAccountTreePopupMenu.add(newMenuItem);
@@ -604,19 +607,21 @@ public class JKMyMoneyViewer extends JFrame {
 			LOGGER.debug("getAccountTreePopupMenu: Created menu with " + myAccountTreePopupMenu.getComponentCount() + " entries");
 
 		}
+		
 		int count = myAccountTreePopupMenu.getComponentCount();
-		for (int i = 0; i < count; i++) {
+		for ( int i = 0; i < count; i++ ) {
 			Component component = myAccountTreePopupMenu.getComponent(i);
-			if (component instanceof JMenuItem) {
+			if ( component instanceof JMenuItem ) {
 				JMenuItem item = (JMenuItem) component;
 				Action action = item.getAction();
-				if (action instanceof AccountActionWrapper) {
+				if ( action instanceof AccountActionWrapper ) {
 					AccountActionWrapper wrapper = (AccountActionWrapper) action;
 					wrapper.getAccountAction().setAccount(getSelectedAccount());
 					wrapper.setEnabled(wrapper.isEnabled());
 				}
 			}
 		}
+		
 		return myAccountTreePopupMenu;
 	}
 
@@ -660,7 +665,6 @@ public class JKMyMoneyViewer extends JFrame {
 	 * @param tabContent the content
 	 */
 	private void addTab(final String tabName, final JComponent tabContent) {
-
 		final JTabbedPane tabbedPane = getJTabbedPane();
 		tabbedPane.addTab(null, tabContent);
 		JPanel tab = new JPanel(new BorderLayout(2, 0));
