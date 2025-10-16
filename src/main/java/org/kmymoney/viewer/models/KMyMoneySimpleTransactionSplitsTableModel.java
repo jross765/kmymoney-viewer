@@ -19,7 +19,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 /**
  * A TableModel that shows a given list of transaction.
  */
-public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransactionsSplitsTableModel {
+public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransactionSplitsTableModel {
 
 	// CAUTION: This enum is on purpose redundant to the one
 	// in GnuCashSimpleAccountTransactionsTableModel.

@@ -406,8 +406,8 @@ public class TransactionSum extends JPanel {
 	public void initializeUI(final String name) {
 		this.setLayout(new BorderLayout());
 		myNameLabel.setText(name);
-		mySumLabel.setText("...�");
-		myDrilldownLabel.setText("");//TODO: implement drilldown
+		mySumLabel.setText("...∑");
+		myDrilldownLabel.setText("");//TODO: implement drill-down
 		this.add(myNameLabel, BorderLayout.WEST);
 		this.add(mySumLabel, BorderLayout.CENTER);
 		this.add(myDrilldownLabel, BorderLayout.EAST);

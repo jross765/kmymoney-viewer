@@ -1,4 +1,4 @@
-package org.kmymoney.viewer.panels;
+package org.kmymoney.viewer.models;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

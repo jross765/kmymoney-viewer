@@ -18,14 +18,16 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
 
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.viewer.Const;
 import org.kmymoney.viewer.actions.TransactionSplitAction;
-import org.kmymoney.viewer.models.KMyMoneyTransactionsSplitsTableModel;
+import org.kmymoney.viewer.models.KMyMoneyTransactionSplitsTableModel;
 import org.kmymoney.viewer.models.SingleTransactionTableModel;
+import org.kmymoney.viewer.widgets.MultiLineToolTip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,10 @@ import org.slf4j.LoggerFactory;
 public class ShowTransactionPanel extends JPanel {
 
 	static final Logger LOGGER = LoggerFactory.getLogger(ShowTransactionPanel.class);
+
+	// ::MAGIC
+	private static final int DEFAULT_WIDTH = 200;
+	private static final int DEFAULT_HEIGHT = 200;
 
 	private static final double FACTOR_COL_WIDTH_ACTION = 1.5;
 
@@ -80,51 +86,52 @@ public class ShowTransactionPanel extends JPanel {
 	 */
 	protected JPopupMenu getCellPopupMenu(final int row) {
 		JPopupMenu menu = new JPopupMenu();
-		final KMyMoneyTransactionSplit split = model.getTransactionSplit(row - 1);
-		if (split != null) {
+		final KMyMoneyTransactionSplit splt = model.getTransactionSplit(row - 1);
+		if ( splt != null ) {
 			Collection<TransactionSplitAction> splitActions = getSplitActions();
-			for (TransactionSplitAction splitAction2 : splitActions) {
-				final TransactionSplitAction splitAction = splitAction2;
+			for ( TransactionSplitAction spltAct : splitActions ) {
+				final TransactionSplitAction spltAct2 = spltAct;
 				JMenuItem newMenuItem = new JMenuItem(new Action() {
 
 					@Override
 					public void addPropertyChangeListener(final PropertyChangeListener aListener) {
-						splitAction.addPropertyChangeListener(aListener);
+						spltAct2.addPropertyChangeListener(aListener);
 					}
 
 					@Override
 					public Object getValue(final String aKey) {
-						return splitAction.getValue(aKey);
+						return spltAct2.getValue(aKey);
 					}
 
 					@Override
 					public boolean isEnabled() {
-						splitAction.setSplit(split);
-						return splitAction.isEnabled();
+						spltAct2.setSplit(splt);
+						return spltAct2.isEnabled();
 					}
 
 					@Override
 					public void putValue(final String aKey, final Object aValue) {
-						splitAction.putValue(aKey, aValue);
+						spltAct2.putValue(aKey, aValue);
 					}
 
 					@Override
 					public void removePropertyChangeListener(final PropertyChangeListener aListener) {
-						splitAction.removePropertyChangeListener(aListener);
+						spltAct2.removePropertyChangeListener(aListener);
 					}
 
 					@Override
 					public void setEnabled(final boolean aB) {
-						splitAction.setEnabled(aB);
+						spltAct2.setEnabled(aB);
 					}
 
 					@Override
 					public void actionPerformed(final ActionEvent aE) {
-						splitAction.setSplit(split);
-						splitAction.actionPerformed(aE);
+						spltAct2.setSplit(splt);
+						spltAct2.actionPerformed(aE);
 					}
 
 				});
+				
 				menu.add(newMenuItem);
 			}
 
@@ -132,6 +139,7 @@ public class ShowTransactionPanel extends JPanel {
 		} else {
 			LOGGER.info("getCellPopupMenu: No split found, not showing popup menu"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+		
 		return menu;
 	}
 
@@ -154,52 +162,51 @@ public class ShowTransactionPanel extends JPanel {
 	}
 
 	/**
-	 * @param aTransaction The transaction to set.
-	 * @see #myTransaction
+	 * @param trx The transaction to set.
 	 */
-	public void setTransaction(final KMyMoneyTransaction aTransaction) {
-
+	public void setTransaction(final KMyMoneyTransaction trx) {
 		Object old = myTransaction;
-		if (old == aTransaction) {
+		if (old == trx) {
 			return; // nothing has changed
 		}
-		myTransaction = aTransaction;
+		myTransaction = trx;
 
 		SingleTransactionTableModel model = null;
 
-		if (aTransaction == null) {
+		if ( trx == null ) {
 			model = new SingleTransactionTableModel();
 			setPreferredSize(new Dimension(0, 0));
 			invalidate();
 		} else {
-			model = new SingleTransactionTableModel(aTransaction);
-			setPreferredSize(new Dimension(200, 200));
+			model = new SingleTransactionTableModel(trx);
+			setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 			invalidate();
 		}
+		
 		setModel(model);
 	}
 
 	/**
-	 * The model of our ${@link #transactionTable}.
+	 * The model of our ${@link #trxTab}.
 	 */
-	private KMyMoneyTransactionsSplitsTableModel model;
+	private KMyMoneyTransactionSplitsTableModel model;
 
 	/**
 	 * The table showing the splits.
 	 */
-	private JTable transactionTable;
+	private JTable trxTab;
 
 	/**
-	 * My SCrollPane over {@link #transactionTable}.
+	 * My SCrollPane over {@link #trxTab}.
 	 */
-	private JScrollPane transactionTableScrollPane;
+	private JScrollPane trxTabScrollPane;
 
 
 	/**
 	 * @return Returns the model.
 	 * @see #model
 	 */
-	public KMyMoneyTransactionsSplitsTableModel getModel() {
+	public KMyMoneyTransactionSplitsTableModel getModel() {
 		return model;
 	}
 
@@ -219,31 +226,31 @@ public class ShowTransactionPanel extends JPanel {
 		model = aModel;
 
 		getTransactionTable().setModel(model);
-		transactionTable.setAutoCreateRowSorter(false);
+		trxTab.setAutoCreateRowSorter(false);
 		
 		// ---
 		// BEGIN col widths
-		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(transactionTable.getFont());
+		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(trxTab.getFont());
 
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setPreferredWidth( //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setPreferredWidth( //$NON-NLS-1$
 				SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DATE_FORMAT.format(LocalDateTime.now())) + Const.TABLE_COL_EXTRA_WIDTH);
 
 		int currencyWidthDefault = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_SMALL));
 		int currencyWidthMax     = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_BIG));
 
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setPreferredWidth(SwingUtilities.computeStringWidth(metrics, KMyMoneyTransactionSplit.Action.REMOVE_SHARES.toString())); //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setPreferredWidth(SwingUtilities.computeStringWidth(metrics, KMyMoneyTransactionSplit.Action.REMOVE_SHARES.toString())); //$NON-NLS-1$
 
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
 
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setMaxWidth(Const.TABLE_COL_MAX_WIDTH); //$NON-NLS-1$
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setMaxWidth(currencyWidthMax); //$NON-NLS-1$
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setMaxWidth(currencyWidthMax); //$NON-NLS-1$
-		transactionTable.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setMaxWidth((int) ( SwingUtilities.computeStringWidth(metrics, KMyMoneyTransactionSplit.Action.REINVEST_DIVIDEND.toString()) * FACTOR_COL_WIDTH_ACTION ) ); //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setMaxWidth(Const.TABLE_COL_MAX_WIDTH); //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setMaxWidth(currencyWidthMax); //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setMaxWidth(currencyWidthMax); //$NON-NLS-1$
+		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setMaxWidth((int) ( SwingUtilities.computeStringWidth(metrics, KMyMoneyTransactionSplit.Action.REINVEST_DIVIDEND.toString()) * FACTOR_COL_WIDTH_ACTION ) ); //$NON-NLS-1$
 		// END col widths
 		// ---
 	}
@@ -254,11 +261,11 @@ public class ShowTransactionPanel extends JPanel {
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getTransactionTableScrollPane() {
-		if (transactionTableScrollPane == null) {
-			transactionTableScrollPane = new JScrollPane();
-			transactionTableScrollPane.setViewportView(getTransactionTable());
+		if (trxTabScrollPane == null) {
+			trxTabScrollPane = new JScrollPane();
+			trxTabScrollPane.setViewportView(getTransactionTable());
 		}
-		return transactionTableScrollPane;
+		return trxTabScrollPane;
 	}
 
 	/**
@@ -267,10 +274,50 @@ public class ShowTransactionPanel extends JPanel {
 	 * @return javax.swing.JTable
 	 */
 	protected JTable getTransactionTable() {
-		if (transactionTable == null) {
-			transactionTable = new JTable();
+		if (trxTab == null) {
+			trxTab = new JTable() {
+				// *****
+				/**
+				 * Our TransactionsPanel.java.
+				 * @see long
+				 */
+				private static final long serialVersionUID = 1L;
+
+				/**
+				 * @see javax.swing.JTable#getToolTipText(java.awt.event.MouseEvent)
+				 */
+
+				@Override
+				public String getToolTipText(final MouseEvent event) {
+					java.awt.Point p = event.getPoint();
+					int rowIndex = rowAtPoint(p);
+					// convertColumnIndexToModel is needed,
+					// because the user may reorder columns
+					//int realColumnIndex = convertColumnIndexToModel(columnAtPoint(p));
+					if ( rowIndex > 0 ) {
+						KMyMoneyTransactionSplitsTableModel model = (KMyMoneyTransactionSplitsTableModel) getModel();
+						KMyMoneyTransactionSplit localSplit = model.getTransactionSplit(rowIndex - 1);
+						StringBuilder output = new StringBuilder();
+						output.append(localSplit.toString());
+
+						return output.toString();
+					}
+
+					// show default-tooltip
+					return super.getToolTipText(event);
+				}
+
+				@Override
+				public JToolTip createToolTip() {
+					MultiLineToolTip tip = new MultiLineToolTip();
+					tip.setComponent(this);
+					return tip;
+				}
+
+			};
+			
 			setModel(new SingleTransactionTableModel());
-			transactionTable.addMouseListener(new MouseAdapter() {
+			trxTab.addMouseListener(new MouseAdapter() {
 
 				/** show ShowTransactionPanel#getCellPopupMenu() if mousePressed is a popupTrigger on this platform.
 				 * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
@@ -278,13 +325,13 @@ public class ShowTransactionPanel extends JPanel {
 				@Override
 				public void mousePressed(final MouseEvent aE) {
 					try {
-						if (aE.isPopupTrigger()) {
-							int row = transactionTable.rowAtPoint(aE.getPoint());
-							if (row > 0) {
+						if ( aE.isPopupTrigger() ) {
+							int row = trxTab.rowAtPoint(aE.getPoint());
+							if ( row > 0 ) {
 								getCellPopupMenu(row).show((JComponent) aE.getSource(),
 										aE.getX(), aE.getY());
 							} else {
-								LOGGER.info("getTransactionTable.mousePressed: No split-row below mouse found, not showing popup-menu"); //$NON-NLS-1$
+								LOGGER.debug("getTransactionTable.mousePressed: No split-row below mouse found, not showing popup-menu"); //$NON-NLS-1$
 							}
 						}
 					} catch (Exception e) {
@@ -298,13 +345,13 @@ public class ShowTransactionPanel extends JPanel {
 				@Override
 				public void mouseReleased(final MouseEvent aE) {
 					try {
-						if (aE.isPopupTrigger()) {
-							int row = transactionTable.rowAtPoint(aE.getPoint());
-							if (row > 0) {
+						if ( aE.isPopupTrigger() ) {
+							int row = trxTab.rowAtPoint(aE.getPoint());
+							if ( row > 0 ) {
 								getCellPopupMenu(row).show((JComponent) aE.getSource(),
 										aE.getX(), aE.getY());
 							} else {
-								LOGGER.info("getTransactionTable.mouseReleased: No split-row below mouse found, not showing popup-menu"); //$NON-NLS-1$
+								LOGGER.debug("getTransactionTable.mouseReleased: No split-row below mouse found, not showing popup-menu"); //$NON-NLS-1$
 							}
 						}
 					} catch (Exception e) {
@@ -313,7 +360,8 @@ public class ShowTransactionPanel extends JPanel {
 				}
 			});
 		}
-		return transactionTable;
+		
+		return trxTab;
 	}
 
 
@@ -324,14 +372,14 @@ public class ShowTransactionPanel extends JPanel {
 	 */
 	public void setSplitActions(final Collection<TransactionSplitAction> aSplitActions) {
 		mySplitActions = aSplitActions;
-		LOGGER.info("setSplitActions: ShowTransactionPanel is given " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		LOGGER.debug("setSplitActions: ShowTransactionPanel is given " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
 	 * @return the splitActions
 	 */
 	protected Collection<TransactionSplitAction> getSplitActions() {
-		LOGGER.info("getSplitActions: howTransactionPanel has " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		LOGGER.debug("getSplitActions: howTransactionPanel has " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return mySplitActions;
 	}
 }

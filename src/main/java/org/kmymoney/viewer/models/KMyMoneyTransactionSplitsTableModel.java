@@ -11,7 +11,7 @@ import org.kmymoney.api.read.KMyMoneyTransactionSplit;
  * TableModels implementing this interface contain a list of transactions.
  * They may be all transactions of an account, a search-result or s.t. similar.
  */
-public interface KMyMoneyTransactionsSplitsTableModel extends TableModel {
+public interface KMyMoneyTransactionSplitsTableModel extends TableModel {
 
     /**
      * Get the number of transactons.

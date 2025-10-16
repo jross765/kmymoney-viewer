@@ -15,12 +15,11 @@ import org.kmymoney.api.Const;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit.Action;
-import org.kmymoney.viewer.panels.Messages_SingleTransactionTableModel;
 
 /**
  * TableModel to show and edit the splits and details of a single transaction.
  */
-public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTableModel {
+public class SingleTransactionTableModel implements KMyMoneyTransactionSplitsTableModel {
 
 	enum TableCols {
 		DATE,
@@ -60,9 +59,9 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 			return false;
 		}
 
-		for ( KMyMoneyTransactionSplit split : getTransaction().getSplits() ) {
-			if ( split.getAccount().getQualifSecCurrID().getType() != getTransaction().getQualifSecCurrID().getType() || 
-				 ! split.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID()) ) {
+		for ( KMyMoneyTransactionSplit splt : getTransaction().getSplits() ) {
+			if ( splt.getAccount().getQualifSecCurrID().getType() != getTransaction().getQualifSecCurrID().getType() || 
+				 ! splt.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID()) ) {
 				return true;
 			}
 		}
@@ -150,42 +149,42 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 					throw new IllegalArgumentException("illegal column index " + columnIndex);
 			}
 
-			KMyMoneyTransactionSplit split = getTransactionSplit(rowIndex - 1);
+			KMyMoneyTransactionSplit splt = getTransactionSplit(rowIndex - 1);
 
 			if ( columnIndex == TableCols.DATE.ordinal() ) {
-				return split.getTransaction().getDatePostedFormatted();
+				return splt.getTransaction().getDatePostedFormatted();
 			} else if ( columnIndex == TableCols.ACTION.ordinal() ) {
-				Action action = split.getAction();
+				Action action = splt.getAction();
 				if ( action == null ) {
 					return "";
 				}
 				return action;
 			} else if ( columnIndex == TableCols.DESCRIPTION.ordinal() ) {
-				String desc = split.getMemo();
+				String desc = splt.getMemo();
 				if ( desc == null || 
 					 desc.trim().length() == 0 ) {
 					return "";
 				}
 				return desc;
 			} else if ( columnIndex == TableCols.ACCOUNT.ordinal() ) {
-				return split.getAccount().getQualifiedName();
+				return splt.getAccount().getQualifiedName();
 			} else if ( columnIndex == TableCols.PLUS.ordinal() ) {
-				if ( split.getValue().isPositive() ) {
-					if ( split.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType() && 
-						 split.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID()) ) {
-						return split.getValueFormatted();
+				if ( splt.getValue().isPositive() ) {
+					if ( splt.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType() && 
+						 splt.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID()) ) {
+						return splt.getValueFormatted();
 					}
-					return split.getValueFormatted() + " (" + split.getSharesFormatted() + ")";
+					return splt.getValueFormatted() + " (" + splt.getSharesFormatted() + ")";
 				} else {
 					return "";
 				}
 			} else if ( columnIndex == TableCols.MINUS.ordinal() ) {
-				if ( ! split.getValue().isPositive() ) {
-					if ( split.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType() && 
-						 split.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID()) ) {
-						return split.getValueFormatted();
+				if ( ! splt.getValue().isPositive() ) {
+					if ( splt.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType() && 
+						 splt.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID()) ) {
+						return splt.getValueFormatted();
 					}
-					return split.getValueFormatted() + " (" + split.getSharesFormatted() + ")";
+					return splt.getValueFormatted() + " (" + splt.getSharesFormatted() + ")";
 				} else {
 					return "";
 				}
@@ -230,7 +229,7 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionsSplitsTa
 	}
 
 	public String getColumnName(final int columnIndex) {
-		return defaultColumnNames[columnIndex]; //TODO: l10n
+		return defaultColumnNames[columnIndex];
 	}
 
 	public void addTableModelListener(final TableModelListener l) {

@@ -646,7 +646,7 @@ public class JKMyMoneyViewer extends JFrame {
 			mySplitActions.add(new OpenAccountInNewTab(getJTabbedPane()));
 			mySplitActions.add(new OpenAccountInNewWindow());
 		}
-		LOGGER.info("getSplitActions: JKMyMoneyViewer has " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions");
+		LOGGER.debug("getSplitActions: JKMyMoneyViewer has " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions");
 		return mySplitActions;
 	}
 

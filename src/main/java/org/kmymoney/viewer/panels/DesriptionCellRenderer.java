@@ -15,7 +15,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
-import org.kmymoney.viewer.models.KMyMoneyTransactionsSplitsTableModel;
+import org.kmymoney.viewer.models.KMyMoneyTransactionSplitsTableModel;
 
 
 /**
@@ -80,8 +80,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 	public final void removePropertyChangeListener(final String propertyName,
 			final PropertyChangeListener listener) {
 		if (myPropertyChange != null) {
-			myPropertyChange.removePropertyChangeListener(propertyName,
-					listener);
+			myPropertyChange.removePropertyChangeListener(propertyName, listener);
 		}
 	}
 
@@ -117,7 +116,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 
-		JLabel renderer = new JLabel(value == null?"":value.toString());
+		JLabel renderer = new JLabel(value == null ? "" : value.toString());
 		Font f = renderer.getFont();
 		// renderer.setFont(f.deriveFont(f.getStyle() ^ Font.BOLD));
 		renderer.setFont(f.deriveFont(f.getStyle()));
@@ -127,20 +126,20 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 
 			// mark unbalanced transactions in red.
 			TableModel model = table.getModel();
-			if (model instanceof KMyMoneyTransactionsSplitsTableModel) {
-				KMyMoneyTransactionsSplitsTableModel tmodel = (KMyMoneyTransactionsSplitsTableModel) model;
+			if ( model instanceof KMyMoneyTransactionSplitsTableModel ) {
+				KMyMoneyTransactionSplitsTableModel tmodel = (KMyMoneyTransactionSplitsTableModel) model;
 				KMyMoneyTransactionSplit split = tmodel.getTransactionSplit(row);
-				if (split != null) {
-					if (split.getTransaction() != null) {
+				if ( split != null ) {
+					if ( split.getTransaction() != null ) {
 						try {
 							List<? extends KMyMoneyTransactionSplit> splits = split.getTransaction().getSplits();
-							for (KMyMoneyTransactionSplit kmymoneyTransactionSplit : splits) {
-								if (kmymoneyTransactionSplit != null) {
-									markTokens(renderer, kmymoneyTransactionSplit.getMemo());
+							for ( KMyMoneyTransactionSplit splt : splits ) {
+								if ( splt != null ) {
+									markTokens(renderer, splt.getMemo());
 								}
 							}
 						} catch (Exception e) {
-							LOGGER.log(Level.SEVERE,"[Exception] Problem in "
+							LOGGER.log(Level.SEVERE, "[Exception] Problem in "
 									+ getClass().getName() + ":getTableCellRendererComponent()"
 									+ " while traversing splits",
 									e);
@@ -150,7 +149,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE,"[Exception] Problem in "
+			LOGGER.log(Level.SEVERE, "[Exception] Problem in "
 			           + getClass().getName() + ":getTableCellRendererComponent()",
 			             e);
 		}
@@ -168,11 +167,12 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 	 */
 	private void markUnbalanced(final JLabel renderer, final KMyMoneyTransactionSplit split) {
 		try {
-			if (split.getTransaction() == null || !split.getTransaction().isBalanced()) {
+			if ( split.getTransaction() == null || 
+				 ! split.getTransaction().isBalanced() ) {
 				renderer.setForeground(Color.red);
 			}
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE,"[Exception] Problem in "
+			LOGGER.log(Level.SEVERE, "[Exception] Problem in "
 			           + getClass().getName() + ":markUnbalanced()",
 			             e);
 			renderer.setForeground(Color.red);
@@ -180,17 +180,16 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 	}
 
 	/**
-	 * Make them bold of they contain the Text "TODO".or " NAK".<br/>
+	 * Make them bold of they contain the Text "TODO".<br/>
 	 * If not and they contain " OK", mark them dark-green.
-	 * @param renderer the renderer to modify it's style
+	 * @param renderer the renderer to modify its style
 	 */
 	private void markTokens(final JLabel renderer, final String text) {
 		try {
-			if (text.contains("TODO")
-				|| text.contains(" NAK")) {
+			if ( text.contains("TODO") ) {
 				Font f = renderer.getFont();
 				renderer.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-			} else if (text.contains(" OK")) {
+			} else if ( text.contains(" OK") ) {
 				renderer.setForeground(Color.GREEN.darker());
 			}
 		} catch (Exception e) {

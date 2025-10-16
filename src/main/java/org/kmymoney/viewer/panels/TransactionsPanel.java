@@ -28,11 +28,10 @@ import javax.swing.table.TableModel;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
-import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.viewer.Const;
 import org.kmymoney.viewer.actions.TransactionSplitAction;
 import org.kmymoney.viewer.models.KMyMoneySimpleAccountTransactionsTableModel;
-import org.kmymoney.viewer.models.KMyMoneyTransactionsSplitsTableModel;
+import org.kmymoney.viewer.models.KMyMoneyTransactionSplitsTableModel;
 import org.kmymoney.viewer.widgets.MultiLineToolTip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,10 +55,10 @@ public class TransactionsPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	// A scrollpane for ${@link #transactionTable}}
-	private JScrollPane transactionTableScrollPane = null;
+	private JScrollPane trxTabScrollPane = null;
 
 	// A table showing the transactions
-	private JTable transactionTable;
+	private JTable trxTab;
 
 	// A panel holding ${@link #selectionSummaryLabel}}
 	private JPanel selectionSummaryPanel = null;
@@ -72,7 +71,7 @@ public class TransactionsPanel extends JPanel {
 	private JComboBox selectionSummaryAccountComboBox = null;
 
 	// The model of our ${@link #transactionTable}
-	private KMyMoneyTransactionsSplitsTableModel model;
+	private KMyMoneyTransactionSplitsTableModel model;
 
 	// The panel to show a single transaction
 	private ShowTransactionPanel mySingleTransactionPanel;
@@ -87,7 +86,7 @@ public class TransactionsPanel extends JPanel {
 	 * @return Returns the model
 	 * @see #model
 	 */
-	public KMyMoneyTransactionsSplitsTableModel getModel() {
+	public KMyMoneyTransactionSplitsTableModel getModel() {
 		return model;
 	}
 
@@ -95,7 +94,7 @@ public class TransactionsPanel extends JPanel {
 	 * @param aModel The model to set.
 	 * @see #model
 	 */
-	protected void setModel(final KMyMoneyTransactionsSplitsTableModel aModel) {
+	protected void setModel(final KMyMoneyTransactionSplitsTableModel aModel) {
 		if ( aModel == null ) {
 			throw new IllegalArgumentException("argument <aModel> is null"); //$NON-NLS-1$
 		}
@@ -118,7 +117,7 @@ public class TransactionsPanel extends JPanel {
 		
 		// ---
 		// BEGIN col widths
-		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(transactionTable.getFont());
+		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(trxTab.getFont());
 		
 		int currencyWidthDefault = SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_SMALL));
 		int currencyWidthMax     = SwingUtilities.computeStringWidth(metrics, KMyMoneySimpleAccountTransactionsTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_BIG));
@@ -217,11 +216,12 @@ public class TransactionsPanel extends JPanel {
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getTransactionTableScrollPane() {
-		if ( transactionTableScrollPane == null ) {
-			transactionTableScrollPane = new JScrollPane();
-			transactionTableScrollPane.setViewportView(getTransactionTable());
+		if ( trxTabScrollPane == null ) {
+			trxTabScrollPane = new JScrollPane();
+			trxTabScrollPane.setViewportView(getTransactionTable());
 		}
-		return transactionTableScrollPane;
+		
+		return trxTabScrollPane;
 	}
 
 	/**
@@ -230,8 +230,8 @@ public class TransactionsPanel extends JPanel {
 	 * @return javax.swing.JTable
 	 */
 	protected JTable getTransactionTable() {
-		if ( transactionTable == null ) {
-			transactionTable = new JTable() {
+		if ( trxTab == null ) {
+			trxTab = new JTable() {
 
 				/**
 				 * Our TransactionsPanel.java.
@@ -253,36 +253,12 @@ public class TransactionsPanel extends JPanel {
 					if ( rowIndex >= 0 ) {
 						KMyMoneySimpleAccountTransactionsTableModel model = (KMyMoneySimpleAccountTransactionsTableModel) getModel();
 						KMyMoneyTransactionSplit localSplit = model.getTransactionSplit(rowIndex);
-						KMyMoneyTransaction transaction = localSplit.getTransaction();
+						KMyMoneyTransaction trx = localSplit.getTransaction();
 						StringBuilder output = new StringBuilder();
-						output.append("\"") //$NON-NLS-1$
-								// ::TODO //$NON-NLS-1$
-								// .append(transaction.getNumber())
-								.append("\t \"") //$NON-NLS-1$
-								.append(transaction.getMemo())
-								.append("\"\t [") //$NON-NLS-1$
-								.append(localSplit.getAccount().getQualifiedName())
-								.append("]\t ") //$NON-NLS-1$
-								.append(localSplit.getShares())
-								.append(localSplit.getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ? " " : " x ") //$NON-NLS-1$ //$NON-NLS-2$
-								.append(localSplit.getAccount().getQualifSecCurrID())
-								.append("\n");
+						output.append(trx.toString());
 
-						for ( KMyMoneyTransactionSplit split : transaction.getSplits() ) {
-							output.append("\"") //$NON-NLS-1$
-									.append(split.getAction())
-									.append("\"\t \"") //$NON-NLS-1$
-									.append(split.getMemo())
-									.append("\"\t [") //$NON-NLS-1$
-									.append(split.getAccount().getQualifiedName())
-									.append("]\t ") //$NON-NLS-1$
-									.append(split.getShares())
-									.append(localSplit.getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ? " " : " x ") //$NON-NLS-1$ //$NON-NLS-2$
-									.append(split.getAccount().getQualifSecCurrID())
-									.append("\n");
-						}
-						if ( ! transaction.isBalanced() ) {
-							output.append("TRANSACTION IS NOT BALANACED! missung=" + transaction.getBalanceFormatted()); //$NON-NLS-1$
+						if ( ! trx.isBalanced() ) {
+							output.append(" TRANSACTION IS NOT BALANCED! missing=" + trx.getBalanceFormatted()); //$NON-NLS-1$
 						}
 
 						return output.toString();
@@ -303,7 +279,7 @@ public class TransactionsPanel extends JPanel {
 
 			// add a listener to call updateSelectionSummary() every time
 			// the user changes the selected rows.
-			transactionTable.getSelectionModel().addListSelectionListener(
+			trxTab.getSelectionModel().addListSelectionListener(
 					new ListSelectionListener() {
 						public void valueChanged(
 								final javax.swing.event.ListSelectionEvent e) {
@@ -311,11 +287,10 @@ public class TransactionsPanel extends JPanel {
 								updateSelectionSummaryAccountList();
 								updateSelectionSummary();
 								if ( getTransactionTable().getSelectedRowCount() == 1 ) {
-									KMyMoneyTransactionSplit transactionSplit = model.getTransactionSplit(getTransactionTable().getSelectedRow
-											());
+									KMyMoneyTransactionSplit splt = model.getTransactionSplit(getTransactionTable().getSelectedRow());
 									//                               setTransaction(transactionSplit.getTransaction());
 
-									getSingleTransactionPanel().setTransaction(transactionSplit.getTransaction());
+									getSingleTransactionPanel().setTransaction(splt.getTransaction());
 									getSingleTransactionPanel().setVisible(true);
 									getSelectionSummaryPanel().setVisible(false);
 									getSummaryPanel().setPreferredSize(getSingleTransactionPanel().getPreferredSize());
@@ -335,9 +310,11 @@ public class TransactionsPanel extends JPanel {
 
 						;
 					});
+			
 			setModel(new KMyMoneySimpleAccountTransactionsTableModel());
 		}
-		return transactionTable;
+		
+		return trxTab;
 	}
 
 	/**
@@ -350,6 +327,7 @@ public class TransactionsPanel extends JPanel {
 			selectionSummaryLabel = new JLabel();
 			selectionSummaryLabel.setText(""); //$NON-NLS-1$
 		}
+		
 		return selectionSummaryLabel;
 	}
 
@@ -370,6 +348,7 @@ public class TransactionsPanel extends JPanel {
 				;
 			});
 		}
+		
 		return selectionSummaryAccountComboBox;
 	}
 
@@ -387,6 +366,7 @@ public class TransactionsPanel extends JPanel {
 			selectionSummaryPanel.add(getSelectionSummaryAccountComboBox(),
 					BorderLayout.SOUTH);
 		}
+		
 		return selectionSummaryPanel;
 	}
 
@@ -400,6 +380,7 @@ public class TransactionsPanel extends JPanel {
 			mySingleTransactionPanel = new ShowTransactionPanel();
 			mySingleTransactionPanel.setSplitActions(getSplitActions());
 		}
+		
 		return mySingleTransactionPanel;
 	}
 
@@ -411,27 +392,25 @@ public class TransactionsPanel extends JPanel {
 		Set<KMyMoneyAccount> accounts = new TreeSet<KMyMoneyAccount>();
 
 		int selectedCount = getTransactionTable().getSelectedRowCount();
-		if (selectedCount < 1) {
+		if ( selectedCount < 1 ) {
 			// get all accounts of all splits
 			int count = model.getRowCount();
 
 			for ( int i = 0; i < count; i++ ) {
-				KMyMoneyTransactionSplit transactionSplit =
-						model.getTransactionSplit(i);
+				KMyMoneyTransactionSplit transactionSplit = model.getTransactionSplit(i);
 
 				try {
-					KMyMoneyTransaction transaction = transactionSplit.getTransaction();
-					if ( transaction == null ) {
+					KMyMoneyTransaction trx = transactionSplit.getTransaction();
+					if ( trx == null ) {
 						LOGGER.error("updateSelectionSummaryAccountList: Split has no transaction"); //$NON-NLS-1$
 					} else {
-						Collection<? extends KMyMoneyTransactionSplit> splits =
-								transaction.getSplits();
-						for ( KMyMoneyTransactionSplit split : splits ) {
+						Collection<? extends KMyMoneyTransactionSplit> splits = trx.getSplits();
+						for ( KMyMoneyTransactionSplit splt : splits ) {
 							try {
-								KMyMoneyAccount account = split.getAccount();
-								if ( account != null ) {
-									if (!accounts.contains(account)) {
-										accounts.add(account);
+								KMyMoneyAccount acct = splt.getAccount();
+								if ( acct != null ) {
+									if ( ! accounts.contains(acct) ) {
+										accounts.add(acct);
 									}
 								}
 							}
@@ -454,12 +433,12 @@ public class TransactionsPanel extends JPanel {
 			// show a summary only for the selected transactions
 			int[] selectedRows = getTransactionTable().getSelectedRows();
 
-			for (int selectedRow : selectedRows) {
-				KMyMoneyTransactionSplit transactionSplit = model.getTransactionSplit(selectedRow);
-				Collection<? extends KMyMoneyTransactionSplit> splits = transactionSplit.getTransaction().getSplits();
-				for (KMyMoneyTransactionSplit split : splits) {
-					if (!accounts.contains(split.getAccount())) {
-						accounts.add(split.getAccount());
+			for ( int selectedRow : selectedRows ) {
+				KMyMoneyTransactionSplit splt = model.getTransactionSplit(selectedRow);
+				Collection<? extends KMyMoneyTransactionSplit> splits = splt.getTransaction().getSplits();
+				for ( KMyMoneyTransactionSplit splt2 : splits ) {
+					if ( ! accounts.contains(splt2.getAccount()) ) {
+						accounts.add(splt2.getAccount());
 					}
 				}
 
@@ -467,8 +446,8 @@ public class TransactionsPanel extends JPanel {
 		}
 
 		DefaultComboBoxModel aModel = new DefaultComboBoxModel();
-		for (KMyMoneyAccount account : accounts) {
-			aModel.addElement(account);
+		for ( KMyMoneyAccount acct : accounts ) {
+			aModel.addElement(acct);
 		}
 
 		JComboBox list = getSelectionSummaryAccountComboBox();
@@ -482,23 +461,24 @@ public class TransactionsPanel extends JPanel {
 	 * that account. If nothing is selected, we add the given split.
 	 *
 	 * @param retval the list of splits to add to
-	 * @param split  the split who's transaction to look at
+	 * @param splt  the split who's transaction to look at
 	 */
-	private void replaceSplitsWithSelectedAccountsSplits(final Set<KMyMoneyTransactionSplit> retval, final KMyMoneyTransactionSplit split) {
+	private void replaceSplitsWithSelectedAccountsSplits(final Set<KMyMoneyTransactionSplit> retval, final KMyMoneyTransactionSplit splt) {
 		JComboBox combo = getSelectionSummaryAccountComboBox();
-		KMyMoneyAccount selectedAccount =
-				(KMyMoneyAccount) combo.getSelectedItem();
-		if ( selectedAccount == null ) {
-			retval.add(split);
+		KMyMoneyAccount selectedAcct = (KMyMoneyAccount) combo.getSelectedItem();
+		
+		if ( selectedAcct == null ) {
+			retval.add(splt);
 		} else {
-			KMyMoneyTransaction transaction = split.getTransaction();
-			for ( KMyMoneyTransactionSplit split2 : transaction.getSplits() ) {
-				if ( split2 == null ) {
+			KMyMoneyTransaction trx = splt.getTransaction();
+			for ( KMyMoneyTransactionSplit splt2 : trx.getSplits() ) {
+				if ( splt2 == null ) {
 					continue;
 				}
-				KMyMoneyAccount account = split2.getAccount();
-				if ( account != null && account.equals(selectedAccount) ) {
-					retval.add(split2);
+				KMyMoneyAccount acct = splt2.getAccount();
+				if ( acct != null && 
+					 acct.equals(selectedAcct) ) {
+					retval.add(splt2);
 				}
 			}
 		}
@@ -507,8 +487,8 @@ public class TransactionsPanel extends JPanel {
 
 	/**
 	 * If the user has selected an account to display a summary for,
-	 * we return All splits of the selected transactions that are
-	 * for that account. Else we return all selected Splits.
+	 * we return all splits of the selected transactions that belong
+	 * to that account. Else, we return all selected Splits.
 	 * If no Splits are selected, we use all splits as the selected
 	 * ones.
 	 *
@@ -517,19 +497,19 @@ public class TransactionsPanel extends JPanel {
 	 */
 	private Collection<KMyMoneyTransactionSplit> getSplitsForSummary() {
 		int[] selectedRows = getTransactionTable().getSelectedRows();
-		Set<KMyMoneyTransactionSplit> retval
-				= new HashSet<KMyMoneyTransactionSplit>();
+		Set<KMyMoneyTransactionSplit> retval = new HashSet<KMyMoneyTransactionSplit>();
 
-		if ( selectedRows == null || selectedRows.length == 0 ) {
+		if ( selectedRows == null || 
+			 selectedRows.length == 0 ) {
 			int count = model.getRowCount();
-			for (int i = 0; i < count; i++) {
-				KMyMoneyTransactionSplit transactionSplit = model.getTransactionSplit(i);
-				replaceSplitsWithSelectedAccountsSplits(retval, transactionSplit);
+			for ( int i = 0; i < count; i++ ) {
+				KMyMoneyTransactionSplit splt = model.getTransactionSplit(i);
+				replaceSplitsWithSelectedAccountsSplits(retval, splt);
 			}
 		} else {
 			for ( int selectedRow : selectedRows ) {
-				KMyMoneyTransactionSplit transactionSplit = model.getTransactionSplit(selectedRow);
-				replaceSplitsWithSelectedAccountsSplits(retval, transactionSplit);
+				KMyMoneyTransactionSplit splt = model.getTransactionSplit(selectedRow);
+				replaceSplitsWithSelectedAccountsSplits(retval, splt);
 			}
 		}
 
@@ -542,7 +522,6 @@ public class TransactionsPanel extends JPanel {
 	 * selected transactions.
 	 */
 	private void updateSelectionSummary() {
-
 		int selectedCount = getTransactionTable().getSelectedRowCount();
 		FixedPointNumber valueSumPlus = new FixedPointNumber(0);
 		FixedPointNumber valueSumMinus = new FixedPointNumber(0);
@@ -551,17 +530,17 @@ public class TransactionsPanel extends JPanel {
 
 		Collection<KMyMoneyTransactionSplit> splits;
 		splits = getSplitsForSummary();
-		for ( KMyMoneyTransactionSplit transactionSplit : splits ) {
-			FixedPointNumber value = transactionSplit.getValue();
+		for ( KMyMoneyTransactionSplit splt : splits ) {
+			FixedPointNumber value = splt.getValue();
 			valueSumBalance.add(value);
-			if (value.isPositive()) {
+			if ( value.isPositive() ) {
 				valueSumPlus.add(value);
 			} else {
 				valueSumMinus.add(value);
 			}
 		}
 
-		if (selectedCount < 1) {
+		if ( selectedCount < 1 ) {
 			// show a summary for all transactions displayed
 			int count = model.getRowCount();
 			getSelectionSummaryLabel().setText(count + Messages_TransactionsPanel.getString("TransactionsPanel.39") //$NON-NLS-1$
@@ -580,21 +559,23 @@ public class TransactionsPanel extends JPanel {
 	}
 
 	/**
-	 * @param aTransaction the transactions to show in detail
+	 * @param trx the transactions to show in detail
 	 */
-	public void setTransaction(final KMyMoneyTransaction aTransaction) {
+	public void setTransaction(final KMyMoneyTransaction trx) {
 		TableModel temp = getTransactionTable().getModel();
-		if ( temp != null && temp instanceof KMyMoneyTransactionsSplitsTableModel ) {
-			KMyMoneyTransactionsSplitsTableModel tblModel = (KMyMoneyTransactionsSplitsTableModel) temp;
+		if ( temp != null && 
+			 temp instanceof KMyMoneyTransactionSplitsTableModel ) {
+			KMyMoneyTransactionSplitsTableModel tblModel = (KMyMoneyTransactionSplitsTableModel) temp;
 			int max = tblModel.getRowCount();
 			for ( int i = 0; i < max; i++ ) {
-				if ( tblModel.getTransactionSplit(i).getTransaction().getID().equals( aTransaction.getID() ) ) {
+				if ( tblModel.getTransactionSplit(i).getTransaction().getID().equals( trx.getID() ) ) {
 					getTransactionTable().getSelectionModel().setSelectionInterval(i, i);
 					return;
 				}
 			}
 		}
-		getSingleTransactionPanel().setTransaction(aTransaction);
+		
+		getSingleTransactionPanel().setTransaction(trx);
 		getSingleTransactionPanel().setVisible(true);
 		getSelectionSummaryPanel().setVisible(false);
 		getSummaryPanel().setPreferredSize(getSingleTransactionPanel().getPreferredSize());
@@ -604,7 +585,7 @@ public class TransactionsPanel extends JPanel {
 	 * @param aSplitActions the actions we shall offer on splits.
 	 */
 	public void setSplitActions(final Collection<TransactionSplitAction> aSplitActions) {
-		LOGGER.info("setSplitActions: TransactionsPanel is given " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		LOGGER.debug("setSplitActions: TransactionsPanel is given " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		mySplitActions = aSplitActions;
 		getSingleTransactionPanel().setSplitActions(mySplitActions);
 	}

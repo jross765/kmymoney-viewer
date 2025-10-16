@@ -20,7 +20,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 /**
  * A TableModel that shows the transaction and balance of an Account.
  */
-public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTransactionsSplitsTableModel {
+public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTransactionSplitsTableModel {
 
 	enum TableCols {
 		DATE,
