@@ -1,10 +1,18 @@
 # Notes on the Module "Viewer"
 
-## What Does It Do? 
+## What Does It Do?
 
 A Swing-based GUI viewer for 
 KMyMoney 
 XML-based files.
+
+## What is This Repo's Relationship with the Other Repos?
+
+* This is a module-level repository which is part of a multi-module project, i.e. it has a parent and several siblings. 
+
+  [Parent](https://github.com/jross765/JKMyMoneyLibNTools.git)
+
+* Under normal circumstances, you cannot compile it on its own (at least not without further preparation), but instead, you should clone it together with the other repos and use the parent repo's build-script.
 
 ## Major Changes 
 ### V. 1.1
