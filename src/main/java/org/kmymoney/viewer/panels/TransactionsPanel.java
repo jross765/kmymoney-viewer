@@ -52,7 +52,7 @@ public class TransactionsPanel extends JPanel {
 	private static final int DEFAULT_HEIGHT = 200;
 
 	// For serializing
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -992520090520811312L;
 
 	// A scrollpane for ${@link #transactionTable}}
 	private JScrollPane trxTabScrollPane = null;

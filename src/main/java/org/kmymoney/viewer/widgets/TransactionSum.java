@@ -36,7 +36,7 @@ public class TransactionSum extends JPanel {
 	/**
 	 * For serializing.
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 476930348138298134L;
 
 	/**
 	 * Automatically created logger for debug and error-output.
