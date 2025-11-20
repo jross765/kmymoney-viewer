@@ -6,8 +6,6 @@ import java.awt.Font;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -16,6 +14,8 @@ import javax.swing.table.TableModel;
 
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.viewer.models.KMyMoneyTransactionSplitsTableModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -23,7 +23,7 @@ import org.kmymoney.viewer.models.KMyMoneyTransactionSplitsTableModel;
  */
 public class DesriptionCellRenderer implements TableCellRenderer {
 
-	private static final Logger LOGGER = Logger.getLogger(DesriptionCellRenderer.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(DesriptionCellRenderer.class.getName());
 
 	//------------------------ support for propertyChangeListeners ------------------
 
@@ -139,7 +139,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 								}
 							}
 						} catch (Exception e) {
-							LOGGER.log(Level.SEVERE, "[Exception] Problem in "
+							LOGGER.error("[Exception] Problem in "
 									+ getClass().getName() + ":getTableCellRendererComponent()"
 									+ " while traversing splits",
 									e);
@@ -149,7 +149,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "[Exception] Problem in "
+			LOGGER.error("[Exception] Problem in "
 			           + getClass().getName() + ":getTableCellRendererComponent()",
 			             e);
 		}
@@ -172,7 +172,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 				renderer.setForeground(Color.red);
 			}
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "[Exception] Problem in "
+			LOGGER.error("[Exception] Problem in "
 			           + getClass().getName() + ":markUnbalanced()",
 			             e);
 			renderer.setForeground(Color.red);
