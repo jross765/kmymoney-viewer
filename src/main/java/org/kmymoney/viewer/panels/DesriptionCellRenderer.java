@@ -193,7 +193,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 				renderer.setForeground(Color.GREEN.darker());
 			}
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE,"[Exception] Problem in "
+			LOGGER.error("[Exception] Problem in "
 			           + getClass().getName() + ":markTokens()",
 			             e);
 		}
