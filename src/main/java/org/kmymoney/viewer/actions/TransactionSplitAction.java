@@ -5,10 +5,10 @@ import javax.swing.Action;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 
 /*
- * Action that can be executed on a KMyMoneyTransactionSplit
+ * Action that can be executed on a {@link KMyMoneyTransactionSplit}
  */
 public interface TransactionSplitAction extends Action {
 
     // Set the split this action works on.
-    void setSplit(final KMyMoneyTransactionSplit aSplit);
+    void setSplit(final KMyMoneyTransactionSplit splt);
 }

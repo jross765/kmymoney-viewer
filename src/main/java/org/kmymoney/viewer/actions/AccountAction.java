@@ -9,9 +9,6 @@ import org.kmymoney.api.read.KMyMoneyAccount;
  */
 public interface AccountAction extends Action {
 
-    /**
-     * Set the account this action works on.
-     * @param anAccount the account to work.
-     */
-    void setAccount(final KMyMoneyAccount anAccount);
+    // Set the account this action works on.
+    void setAccount(final KMyMoneyAccount acct);
 }
