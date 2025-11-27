@@ -186,6 +186,28 @@ public class ShowTransactionPanel extends JPanel {
 		setModel(model);
 	}
 
+	public void setTransactionSplit(final KMyMoneyTransactionSplit splt) {
+		Object old = myTransaction;
+		if (old == splt.getTransaction()) {
+			return; // nothing has changed
+		}
+		myTransaction = splt.getTransaction();
+
+		SingleTransactionTableModel model = null;
+
+		if ( splt == null ) {
+			model = new SingleTransactionTableModel();
+			setPreferredSize(new Dimension(0, 0));
+			invalidate();
+		} else {
+			model = new SingleTransactionTableModel(splt);
+			setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+			invalidate();
+		}
+		
+		setModel(model);
+	}
+
 	/**
 	 * The model of our ${@link #trxTab}.
 	 */
@@ -225,7 +247,7 @@ public class ShowTransactionPanel extends JPanel {
 		}
 		model = aModel;
 
-		getTransactionTable().setModel(model);
+		getTransactionSplitTable().setModel(model);
 		trxTab.setAutoCreateRowSorter(false);
 		
 		// ---
@@ -236,7 +258,7 @@ public class ShowTransactionPanel extends JPanel {
 				SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DATE_FORMAT.format(LocalDateTime.now())) + Const.TABLE_COL_EXTRA_WIDTH);
 
 		int currencyWidthDefault = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_SMALL));
-		int currencyWidthMax     = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_BIG));
+		int currencyWidthMax     = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_BIG)) * 2; // sic, times 2 because of add. info in case of non-currency
 
 		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
 		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
@@ -263,8 +285,9 @@ public class ShowTransactionPanel extends JPanel {
 	private JScrollPane getTransactionTableScrollPane() {
 		if (trxTabScrollPane == null) {
 			trxTabScrollPane = new JScrollPane();
-			trxTabScrollPane.setViewportView(getTransactionTable());
+			trxTabScrollPane.setViewportView(getTransactionSplitTable());
 		}
+		
 		return trxTabScrollPane;
 	}
 
@@ -273,7 +296,7 @@ public class ShowTransactionPanel extends JPanel {
 	 *
 	 * @return javax.swing.JTable
 	 */
-	protected JTable getTransactionTable() {
+	protected JTable getTransactionSplitTable() {
 		if (trxTab == null) {
 			trxTab = new JTable() {
 				// *****
