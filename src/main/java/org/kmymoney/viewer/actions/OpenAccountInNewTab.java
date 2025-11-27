@@ -26,24 +26,28 @@ import org.kmymoney.viewer.panels.TransactionsPanel;
  * Action to open an account in a new tab.
  */
 public class OpenAccountInNewTab implements AccountAction,
-		org.kmymoney.viewer.actions.TransactionSplitAction {
+											TransactionSplitAction
+{
+
+    // ---------------------------------------------------------------
 
     // The account we open
     private KMyMoneyAccount myAccount;
+
+    // Optional: the transaction to highlight.
+    private KMyMoneyTransaction myTransaction;
+
+    // ----------------------------
 
     private final Map<String, Object> myAddedTags = new HashMap<String, Object>();
 
     private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
 
-    // Optional: the transaction to highlight.
-    private KMyMoneyTransaction myTransaction;
-
     // The tabbed pane to open the account in
     private final JTabbedPane myTabbedPane;
 
-    /*
-     * Initialize.
-     */
+    // ---------------------------------------------------------------
+
     public OpenAccountInNewTab(final JTabbedPane aTabbedPane) {
         this.putValue(Action.NAME, Messages_OpenAccountInNewTab.getString("OpenAccountInNewTab.1"));
         this.putValue(Action.LONG_DESCRIPTION, Messages_OpenAccountInNewTab.getString("OpenAccountInNewTab.2"));
@@ -51,14 +55,20 @@ public class OpenAccountInNewTab implements AccountAction,
         myTabbedPane = aTabbedPane;
     }
 
+    public OpenAccountInNewTab(final JTabbedPane aTabbedPane, final KMyMoneyAccount anAccount) {
+        this(aTabbedPane);
+        setAccount(anAccount);
+    }
+
     public OpenAccountInNewTab(final JTabbedPane aTabbedPane, final KMyMoneyTransactionSplit aSplit) {
         this(aTabbedPane);
         setSplit(aSplit);
     }
 
-    public OpenAccountInNewTab(final JTabbedPane aTabbedPane, final KMyMoneyAccount anAccount) {
-        this(aTabbedPane);
-        setAccount(anAccount);
+    // ---------------------------------------------------------------
+
+    protected KMyMoneyAccount getAccount() {
+        return myAccount;
     }
 
     @Override
@@ -72,6 +82,8 @@ public class OpenAccountInNewTab implements AccountAction,
         myAccount = aSplit.getAccount();
         myTransaction = aSplit.getTransaction();
     }
+
+    // ---------------------------------------------------------------
 
     @Override
     public void addPropertyChangeListener(final PropertyChangeListener aListener) {
@@ -114,7 +126,6 @@ public class OpenAccountInNewTab implements AccountAction,
     }
 
     private void addTab(final String tabName, final JComponent tabContent) {
-
         myTabbedPane.addTab(null, tabContent);
         JPanel tab = new JPanel(new BorderLayout(2, 0));
         tab.setOpaque(false);
@@ -124,19 +135,13 @@ public class OpenAccountInNewTab implements AccountAction,
         final int size = 10;
         closeButton.setPreferredSize(new Dimension(size, size));
         closeButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent aE) {
                 myTabbedPane.remove(tabContent);
             }
-
         });
         tab.add(closeButton, BorderLayout.EAST);
         myTabbedPane.setTabComponentAt(myTabbedPane.getTabCount() - 1, tab);
-    }
-
-    protected KMyMoneyAccount getAccount() {
-        return myAccount;
     }
 
 }
