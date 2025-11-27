@@ -159,7 +159,7 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
 //                  if (account != null && !account.getCurrencyID().equals("EUR")) {
 //                      return split.getValueFormatet();
 //                  }
-            		return currencyFormat.format(split.getShares());
+            		return split.getSharesFormatted();
             	} else {
             		return "";
             	}
@@ -168,7 +168,7 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
 //                    if (account != null && !account.getCurrencyID().equals("EUR")) {
 //                        return split.getValueFormatet();
 //                    }
-                 return currencyFormat.format(split.getShares());
+                 return split.getSharesFormatted();
                 } else {
                     return "";
                 }
@@ -262,5 +262,4 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
     public void removeTableModelListener(final TableModelListener l) {
         myTableModelListeners.remove(l);
     }
-
 }

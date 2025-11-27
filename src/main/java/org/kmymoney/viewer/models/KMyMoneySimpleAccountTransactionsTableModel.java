@@ -15,7 +15,9 @@ import javax.swing.event.TableModelListener;
 
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
+import org.kmymoney.api.read.impl.KMyMoneyAccountImpl;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
+import org.kmymoney.viewer.GUIServices;
 
 /**
  * A TableModel that shows the transaction and balance of an Account.
@@ -152,7 +154,7 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 					//                  if (account != null && !account.getCurrencyID().equals("EUR")) {
 					//                      return split.getValueFormatet();
 					//                  }
-					return currencyFormat.format(split.getShares());
+					return split.getSharesFormatted();
 				} else {
 					return "";
 				}
@@ -161,15 +163,15 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 					//                    if (account != null && !account.getCurrencyID().equals("EUR")) {
 					//                        return split.getValueFormatet();
 					//                    }
-					return currencyFormat.format(split.getShares());
+					return split.getSharesFormatted();
 				} else {
 					return "";
 				}
 			} else if ( columnIndex == TableCols.BALANCE.ordinal() ) {
 				if ( account != null ) {
-					return currencyFormat.format(account.getBalance(split));
+					return GUIServices.formatBalance((KMyMoneyAccountImpl) account, account.getBalance(split));
 				} else {
-					return currencyFormat.format(split.getAccount().getBalance(split));
+					return GUIServices.formatBalance((KMyMoneyAccountImpl) account, split.getAccount().getBalance(split));
 				}
 			} else {
 				throw new IllegalArgumentException("illegal column index " + columnIndex);
