@@ -49,10 +49,24 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionSplitsTab
 	// How to format currencies
 	public static final NumberFormat DEFAULT_CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
 
+	// ---------------------------------------------------------------
+
+	public SingleTransactionTableModel() {
+		super();
+		myTransaction = null;
+	}
+
 	public SingleTransactionTableModel(final KMyMoneyTransaction trx) {
 		super();
 		myTransaction = trx;
 	}
+
+	public SingleTransactionTableModel(final KMyMoneyTransactionSplit splt) {
+		super();
+		myTransaction = splt.getTransaction();
+	}
+	
+	// ---------------------------------------------------------------
 
 	public boolean isMultiCurrency() {
 		if ( getTransaction() == null ) {
@@ -67,11 +81,6 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionSplitsTab
 		}
 
 		return false;
-	}
-
-	public SingleTransactionTableModel() {
-		super();
-		myTransaction = null;
 	}
 
 	public KMyMoneyTransaction getTransaction() {
