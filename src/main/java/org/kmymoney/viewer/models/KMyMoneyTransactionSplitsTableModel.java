@@ -27,5 +27,4 @@ public interface KMyMoneyTransactionSplitsTableModel extends TableModel {
      */
     KMyMoneyTransactionSplit getTransactionSplit(final int rowIndex);
 
-
 }

@@ -20,7 +20,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.viewer.GUIServices;
 
 /**
- * A TableModel that shows the transaction and balance of an Account.
+ * A Table model that shows the transaction and balance of an Account.
  */
 public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTransactionSplitsTableModel {
 
@@ -32,6 +32,19 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 		MINUS,
 		BALANCE
 	}
+
+	// ---------------------------------------------------------------
+
+	// How to format dates
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_DATE;
+	
+	// How to format currencies
+	private NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+
+	// How to format currencies
+	public static final NumberFormat DEFAULT_CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
+
+	// ---------------------------------------------------------------
 
 	// The account the transactions of which we are showing.
 	private final KMyMoneyAccount account;
@@ -46,13 +59,7 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 			Messages_KMyMoneySimpleAccountTransactionsTableModel.getString("KMyMoneySimpleAccountTransactionsTableModel.6")
 		};
 
-	/**
-	 * @param anAccount the account the splits of which to display.
-	 */
-	public KMyMoneySimpleAccountTransactionsTableModel(final KMyMoneyAccount anAccount) {
-		super();
-		account = anAccount;
-	}
+	// ---------------------------------------------------------------
 
 	/**
 	 * the Table will be empty.
@@ -62,6 +69,16 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 		super();
 		account = null;
 	}
+
+	/**
+	 * @param anAccount the account the splits of which to display.
+	 */
+	public KMyMoneySimpleAccountTransactionsTableModel(final KMyMoneyAccount anAccount) {
+		super();
+		account = anAccount;
+	}
+
+	// ---------------------------------------------------------------
 
 	/**
 	 * {@inheritDoc}
@@ -88,6 +105,7 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 		if ( account == null ) {
 			return new LinkedList<KMyMoneyTransactionSplit>();
 		}
+		
 		return account.getTransactionSplits();
 	}
 
@@ -104,15 +122,6 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 	public Class getColumnClass(final int columnIndex) {
 		return String.class;
 	}
-
-	// How to format dates
-	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_DATE;
-	
-	// How to format currencies
-	private NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-	
-	// How to format currencies
-	public static final NumberFormat DEFAULT_CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
 
 	/**
 	 * Get the TransactionsSplit at the given index.
@@ -150,19 +159,12 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 				return desc;
 			} else if ( columnIndex == TableCols.PLUS.ordinal() ) {
 				if ( split.getShares().isPositive() ) {
-					//                  //T O D O: use default-currency here
-					//                  if (account != null && !account.getCurrencyID().equals("EUR")) {
-					//                      return split.getValueFormatet();
-					//                  }
 					return split.getSharesFormatted();
 				} else {
 					return "";
 				}
 			} else if ( columnIndex == TableCols.MINUS.ordinal() ) {
 				if ( ! split.getShares().isPositive() ) {
-					//                    if (account != null && !account.getCurrencyID().equals("EUR")) {
-					//                        return split.getValueFormatet();
-					//                    }
 					return split.getSharesFormatted();
 				} else {
 					return "";

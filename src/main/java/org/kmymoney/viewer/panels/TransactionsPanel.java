@@ -48,11 +48,15 @@ public class TransactionsPanel extends JPanel {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionsPanel.class);
 
+	// For serializing
+	private static final long serialVersionUID = -992520090520811312L;
+
+	// ---------------------------------------------------------------
+
 	private static final int DEFAULT_WIDTH = 300;
 	private static final int DEFAULT_HEIGHT = 200;
 
-	// For serializing
-	private static final long serialVersionUID = -992520090520811312L;
+	// ---------------------------------------------------------------
 
 	// A scrollpane for ${@link #transactionTable}}
 	private JScrollPane trxTabScrollPane = null;
@@ -82,13 +86,16 @@ public class TransactionsPanel extends JPanel {
 	// The actions we have on Splits
 	private Collection<TransactionSplitAction> mySplitActions;
 
+	// ---------------------------------------------------------------
+
 	/**
 	 * @return Returns the model
-	 * @see #model
 	 */
 	public KMyMoneyTransactionSplitsTableModel getModel() {
 		return model;
 	}
+
+	// ---------------------------------------------------------------
 
 	/**
 	 * @param aModel The model to set.
@@ -160,7 +167,6 @@ public class TransactionsPanel extends JPanel {
 		updateSelectionSummaryAccountList();
 		updateSelectionSummary();
 		getSingleTransactionPanel().setTransaction(null);
-
 	}
 
 	/**

@@ -17,7 +17,7 @@ import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 
 /**
- * A TableModel that shows a given list of transaction.
+ * A Table model that shows a given list of transaction.
  */
 public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransactionSplitsTableModel {
 
@@ -34,6 +34,19 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
 		MINUS
 	}
 
+	// ---------------------------------------------------------------
+
+    // How to format dates.
+    public static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+    
+    // How to format currencies
+    private  NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+    
+    // How to format currencies
+    public static final NumberFormat defaultCurrencyFormat = NumberFormat.getCurrencyInstance();
+
+	// ---------------------------------------------------------------
+
 	private final List<? extends KMyMoneyTransactionSplit> mySplits;
 
 
@@ -46,13 +59,7 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
     		Messages_KMyMoneySimpleAccountTransactionSplitsTableModel.getString("KMyMoneySimpleAccountTransactionSplitsTableModel.5")
     	};
 
-    /**
-     * @param java.util.List<? extends KMyMoneyTransactionSplit> the splits to display.
-     */
-    public KMyMoneySimpleTransactionSplitsTableModel(final List<? extends KMyMoneyTransactionSplit> aList) {
-        super();
-        mySplits = aList;
-    }
+	// ---------------------------------------------------------------
 
     /**
      * the Table will be empty.
@@ -62,6 +69,16 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
         super();
         mySplits = null;
     }
+
+    /**
+     * @param java.util.List<? extends KMyMoneyTransactionSplit> the splits to display.
+     */
+    public KMyMoneySimpleTransactionSplitsTableModel(final List<? extends KMyMoneyTransactionSplit> aList) {
+        super();
+        mySplits = aList;
+    }
+
+	// ---------------------------------------------------------------
 
     /**
      * {@inheritDoc}
@@ -106,17 +123,6 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
         return String.class;
     }
 
-
-    // How to format dates.
-    public static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
-    
-    // How to format currencies.
-    private  NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-    
-    // How to format currencies.
-    public static final NumberFormat defaultCurrencyFormat = NumberFormat.getCurrencyInstance();
-
-
     /**
      * Get the TransactionsSplit at the given index.
      * Throws an exception if the index is invalid.
@@ -155,19 +161,12 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
                 return desc;
             } else if ( columnIndex == TableCols.PLUS.ordinal() ) {
             	if ( split.getShares().isPositive() ) {
-//                  //T O D O: use default-currency here
-//                  if (account != null && !account.getCurrencyID().equals("EUR")) {
-//                      return split.getValueFormatet();
-//                  }
             		return split.getSharesFormatted();
             	} else {
             		return "";
             	}
             } else if ( columnIndex == TableCols.MINUS.ordinal() ) {
                 if ( ! split.getShares().isPositive() ) {
-//                    if (account != null && !account.getCurrencyID().equals("EUR")) {
-//                        return split.getValueFormatet();
-//                    }
                  return split.getSharesFormatted();
                 } else {
                     return "";
@@ -230,7 +229,7 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
      * {@inheritDoc}
      */
     public String getColumnName(final int columnIndex) {
-        return defaultColumnNames[columnIndex]; //TODO: l10n
+        return defaultColumnNames[columnIndex];
     }
 
     /**

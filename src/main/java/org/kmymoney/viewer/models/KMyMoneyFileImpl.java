@@ -25,9 +25,19 @@ public class KMyMoneyFileImpl extends org.kmymoney.api.read.impl.KMyMoneyFileImp
 		super( pFile );
 	}
 
+	public KMyMoneyFileImpl(File pFile, boolean withProgBar) throws IOException
+	{
+		super( pFile, withProgBar );
+	}
+
 	public KMyMoneyFileImpl(KMyMoneyFile kmmFile) throws IOException
 	{
 		super( kmmFile.getFile() );
+	}
+	
+	public KMyMoneyFileImpl(KMyMoneyFile kmmFile, boolean withProgBar) throws IOException
+	{
+		super( kmmFile.getFile(), withProgBar );
 	}
 	
 	// ---------------------------------------------------------------

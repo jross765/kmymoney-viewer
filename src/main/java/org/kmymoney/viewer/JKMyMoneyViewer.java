@@ -333,7 +333,6 @@ public class JKMyMoneyViewer extends JFrame {
 		acctID       = new KMMAcctID();
 		trxID        = new KMMTrxID();
 		spltID       = new KMMSpltID();
-		// qualifSpltID = new KMMQualifSpltID();
 
 //	    cfg = new PropertiesConfiguration(System.getProperty("config"));
 //	    getConfigSettings(cfg);
@@ -359,7 +358,7 @@ public class JKMyMoneyViewer extends JFrame {
 	    Option optTrxID = Option.builder("trx")
 	    		.hasArg()
 	    		.argName("trxid")
-	    		.desc("Transaction ID")
+	    		.desc("Transaction-ID")
 	    		.longOpt("transaction-id")
 	    		.get();
 		
@@ -367,7 +366,7 @@ public class JKMyMoneyViewer extends JFrame {
 	    		.hasArg()
 	    		.argName("spltid")
 	    		.desc("Transaction split-ID " +
-	    			  "(non-qualified, use together with <transaction-id>)")
+				  "(non-qualified, use together with <transaction-id>)")
 	    		.longOpt("split-id")
 	    		.get();
 		
@@ -379,7 +378,7 @@ public class JKMyMoneyViewer extends JFrame {
 		options.addOption( optSpltID );
 	}
 
-	protected void getConfigSettings(PropertiesConfiguration cs) throws Exception {
+	protected void getConfigSettings(PropertiesConfiguration cfg) throws Exception {
 		// ::EMPTY
 	}
 
@@ -796,7 +795,7 @@ public class JKMyMoneyViewer extends JFrame {
 	 * @throws IOException   if the file cannot be loaded from disk
 	 */
 	protected KMyMoneyFile createModelFromFile(final File f) throws IOException {
-		return new KMyMoneyFileImpl(f);
+		return new KMyMoneyFileImpl(f, true);
 	}
 
 	/**
@@ -859,12 +858,12 @@ public class JKMyMoneyViewer extends JFrame {
 			throw new IllegalArgumentException("argument <model> is null");
 		}
 
-		myModel = new KMyMoneyFileImpl( model );
+		myModel = new KMyMoneyFileImpl( model);
 		getAccountsTree().setModel(new KMyMoneyAccountsTreeModel(myModel));
 		setSelectedAccount(null);
 		setTitle(TITLE);
 	}
-	
+
 	/**
 	 * @param model the file we operate on.
 	 */

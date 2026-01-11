@@ -38,16 +38,17 @@ public class ShowTransactionPanel extends JPanel {
 
 	static final Logger LOGGER = LoggerFactory.getLogger(ShowTransactionPanel.class);
 
+	private static final long serialVersionUID = 2962520591431305447L;
+
+	// ---------------------------------------------------------------
+
 	// ::MAGIC
 	private static final int DEFAULT_WIDTH = 200;
 	private static final int DEFAULT_HEIGHT = 200;
 
 	private static final double FACTOR_COL_WIDTH_ACTION = 1.5;
 
-	/**
-	 * for serializing.
-	 */
-	private static final long serialVersionUID = 2962520591431305447L;
+	// ---------------------------------------------------------------
 
 	/**
 	 * The transaction we are showing.
@@ -60,6 +61,22 @@ public class ShowTransactionPanel extends JPanel {
 	 */
 	private Collection<TransactionSplitAction> mySplitActions;
 
+	// ---------------------------------------------------------------
+
+	// The table showing the splits.
+	private JTable trxTab;
+
+	// My SCrollPane over {@link #trxTab}.
+	private JScrollPane trxTabScrollPane;
+
+	// ---------------------------------------------------------------
+
+	public ShowTransactionPanel() {
+		super();
+		myTransaction = null;
+
+		initialize();
+	}
 
 	/**
 	 * @param aTransaction The transaction we are showing.
@@ -71,9 +88,8 @@ public class ShowTransactionPanel extends JPanel {
 		initialize();
 	}
 
-	/**
-	 * initialize the Gui.
-	 */
+	// ---------------------------------------------------------------
+
 	private void initialize() {
 		this.setLayout(new BorderLayout());
 		this.add(getTransactionTableScrollPane(), BorderLayout.CENTER);
@@ -144,18 +160,7 @@ public class ShowTransactionPanel extends JPanel {
 	}
 
 	/**
-	 * make us visible.
-	 */
-	public ShowTransactionPanel() {
-		super();
-		myTransaction = null;
-
-		initialize();
-	}
-
-	/**
 	 * @return Returns the transaction.
-	 * @see #myTransaction
 	 */
 	public KMyMoneyTransaction getTransaction() {
 		return myTransaction;
@@ -214,19 +219,7 @@ public class ShowTransactionPanel extends JPanel {
 	private KMyMoneyTransactionSplitsTableModel model;
 
 	/**
-	 * The table showing the splits.
-	 */
-	private JTable trxTab;
-
-	/**
-	 * My SCrollPane over {@link #trxTab}.
-	 */
-	private JScrollPane trxTabScrollPane;
-
-
-	/**
 	 * @return Returns the model.
-	 * @see #model
 	 */
 	public KMyMoneyTransactionSplitsTableModel getModel() {
 		return model;
@@ -402,7 +395,7 @@ public class ShowTransactionPanel extends JPanel {
 	 * @return the splitActions
 	 */
 	protected Collection<TransactionSplitAction> getSplitActions() {
-		LOGGER.debug("getSplitActions: howTransactionPanel has " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		LOGGER.debug("getSplitActions: ShowTransactionPanel has " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return mySplitActions;
 	}
 }
