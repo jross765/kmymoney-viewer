@@ -13,7 +13,7 @@ import java.util.Set;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.kmymoney.api.currency.ComplexPriceTable;
+import org.kmymoney.api.pricedb.ComplexPriceTable;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyTransaction;
