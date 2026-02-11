@@ -77,7 +77,7 @@ public class TransactionSum extends JPanel {
 	/**
 	 * The type of summations we are to calculate.
 	 */
-	private SUMMATIONTYPE mySummationType = SUMMATIONTYPE.ALL;
+	private SummationType mySummationType = SummationType.ALL;
 
 	/**
 	 * (c) 2007 by <a href="http://Wolschon.biz>
@@ -90,7 +90,7 @@ public class TransactionSum extends JPanel {
 	 *
 	 * @author <a href="mailto:Marcus@Wolschon.biz">Marcus Wolschon</a>
 	 */
-	public enum SUMMATIONTYPE {
+	public enum SummationType {
 		/**
 		 * Sum all splits.
 		 */
@@ -114,7 +114,7 @@ public class TransactionSum extends JPanel {
 		 * @param aProperty parse this string
 		 * @return and return the value that matches the name
 		 */
-		public static SUMMATIONTYPE getByName(final String aProperty) {
+		public static SummationType getByName(final String aProperty) {
 			if (aProperty.equalsIgnoreCase("all")) {
 				return ALL;
 			}
@@ -180,7 +180,7 @@ public class TransactionSum extends JPanel {
 	public TransactionSum(final KMyMoneyFile books,
 			final Set<KMyMoneyAccount> sourceAccounts,
 			final Set<KMyMoneyAccount> targetAccounts,
-			final SUMMATIONTYPE summationType,
+			final SummationType summationType,
 			final String name,
 			final LocalDate minDate,
 			final LocalDate maxDate) {
@@ -210,10 +210,8 @@ public class TransactionSum extends JPanel {
 		}
 		myTransactionsCounted = 0;
 
-		Set<KMyMoneyAccount> sourceAccounts = new HashSet<KMyMoneyAccount>(
-				getSourceAccounts());
-		Set<KMyMoneyAccount> targetAccounts = new HashSet<KMyMoneyAccount>(
-				buildTransitiveClosure(getTargetAccounts()));
+		Set<KMyMoneyAccount> sourceAccounts = new HashSet<KMyMoneyAccount>(getSourceAccounts());
+		Set<KMyMoneyAccount> targetAccounts = new HashSet<KMyMoneyAccount>(buildTransitiveClosure(getTargetAccounts()));
 		Set<KMMComplAcctID> targetAccountsIDs = new HashSet<KMMComplAcctID>();
 		for (KMyMoneyAccount targetAccount : targetAccounts) {
 			targetAccountsIDs.add(targetAccount.getID());
@@ -224,7 +222,7 @@ public class TransactionSum extends JPanel {
 		Set<KMyMoneyTransactionSplit> transactions = new HashSet<KMyMoneyTransactionSplit>();
 		FixedPointNumber sum = new FixedPointNumber(0);
 		if (sourceAccounts.size() == 0) {
-			LOGGER.warn("There are no source-accounts given for this transaction-sum");
+			LOGGER.warn("reCalculate: There are no source-accounts given for this transaction-sum");
 		}
 		for (KMyMoneyAccount sourceAccount : sourceAccounts) {
 			FixedPointNumber addMe =
@@ -250,8 +248,7 @@ public class TransactionSum extends JPanel {
 		} else {
 			Iterator<KMyMoneyAccount> iterator2 = sourceAccounts.iterator();
 			if (iterator2.hasNext()) {
-				mySumLabel.setText("   " + sum.toString() + ""
-						+ iterator2.next().getQualifSecCurrID());
+				mySumLabel.setText("   " + sum.toString() + "" + iterator2.next().getQualifSecCurrID());
 			} else {
 				mySumLabel.setText("   no account");
 			}
@@ -290,9 +287,9 @@ public class TransactionSum extends JPanel {
 			}
 			alreadyHandled.add(split);
 
-			if (getSummationType().equals(SUMMATIONTYPE.ONLYFROM) && split.getShares().isPositive()) {
+			if (getSummationType().equals(SummationType.ONLYFROM) && split.getShares().isPositive()) {
 				continue;
-			} else if (getSummationType().equals(SUMMATIONTYPE.ONLYTO) && !split.getShares().isPositive()) {
+			} else if (getSummationType().equals(SummationType.ONLYTO) && !split.getShares().isPositive()) {
 				continue;
 			}
 			if (aSourceAccount.getQualifSecCurrID().getType() == currencyID.getType()
@@ -338,36 +335,23 @@ public class TransactionSum extends JPanel {
 		ComplexPriceTable currencyTable = getBooks().getCurrencyTable();
 
 		if (currencyTable == null) {
-			LOGGER.warn("SimpleAccount.getBalance() - cannot transfer "
+			LOGGER.warn("convert: Cannot transfer "
 					+ "to given currency because we have no currency-table!");
 			return null;
 		}
 		FixedPointNumber sum = new FixedPointNumber(aSum);
 
-		if (!currencyTable.convertToBaseCurrency(
-				sum,
-				aCurrencyIDFrom)) {
-			Collection<String> currencies = getBooks().getCurrencyTable().getCurrencies(
-					aCurrencyIDFrom.getType());
-			LOGGER.warn("SimpleAccount.getBalance() - cannot transfer "
-					+ "from our currency '"
-					+ aCurrencyIDFrom.getType() + "'-'"
-					+ aCurrencyIDFrom
-					+ "' to the base-currency!"
-					+ " \n(we know " + getBooks().getCurrencyTable().getNameSpaces().size()
-					+ " currency-namespaces and "
-					+ (currencies == null ? "no" : "" + currencies.size())
-					+ " currencies in our namespace)");
+		sum = currencyTable.convertToBaseCurrency(sum, aCurrencyIDFrom);
+		if ( sum == null ) {
+			LOGGER.warn("convert: Cannot transfer "
+					+ "from our currency '" + aCurrencyIDFrom.toString() + "' to the base-currency!");
 			return null;
 		}
 
-		if (!currencyTable.convertFromBaseCurrency(sum, aCurrencyIDTo)) {
-			LOGGER.warn("SimpleAccount.getBalance() - cannot transfer "
-					+ "from base-currenty to given currency '"
-					+ aCurrencyIDTo.getType()
-					+ "-"
-					+ aCurrencyIDTo
-					+ "'!");
+		sum = currencyTable.convertFromBaseCurrency(sum, aCurrencyIDTo);
+		if ( sum == null ) {
+			LOGGER.warn("convert: Cannot transfer "
+					+ "from base-currenty to given currency '" + aCurrencyIDTo.toString() + "'!");
 			return null;
 		}
 		return sum;
@@ -558,7 +542,7 @@ public class TransactionSum extends JPanel {
 	 * @return Returns the summationType.
 	 * @see #mySummationType
 	 */
-	public SUMMATIONTYPE getSummationType() {
+	public SummationType getSummationType() {
 		return mySummationType;
 	}
 
@@ -566,7 +550,7 @@ public class TransactionSum extends JPanel {
 	 * @param aSummationType The summationType to set.
 	 * @see #mySummationType
 	 */
-	public void setSummationType(final SUMMATIONTYPE aSummationType) {
+	public void setSummationType(final SummationType aSummationType) {
 		if (aSummationType == null) {
 			throw new IllegalArgumentException("null 'aSummationType' given!");
 		}
