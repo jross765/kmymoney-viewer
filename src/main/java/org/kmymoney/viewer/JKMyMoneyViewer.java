@@ -58,6 +58,8 @@ import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
 import org.kmymoney.viewer.actions.AccountAction;
+import org.kmymoney.viewer.actions.CopyAccountIDToClipboard;
+import org.kmymoney.viewer.actions.CopySplitIDToClipboard;
 import org.kmymoney.viewer.actions.OpenAccountInNewTab;
 import org.kmymoney.viewer.actions.OpenAccountInNewWindow;
 import org.kmymoney.viewer.actions.TransactionSplitAction;
@@ -919,6 +921,7 @@ public class JKMyMoneyViewer extends JFrame {
 			myAccountActions = new LinkedList<AccountAction>();
 			myAccountActions.add(new OpenAccountInNewTab(getJTabbedPane()));
 			myAccountActions.add(new OpenAccountInNewWindow());
+			myAccountActions.add(new CopyAccountIDToClipboard());
 		}
 		return myAccountActions;
 	}
@@ -931,6 +934,8 @@ public class JKMyMoneyViewer extends JFrame {
 			mySplitActions = new LinkedList<TransactionSplitAction>();
 			mySplitActions.add(new OpenAccountInNewTab(getJTabbedPane()));
 			mySplitActions.add(new OpenAccountInNewWindow());
+			mySplitActions.add(new CopyAccountIDToClipboard());
+			mySplitActions.add(new CopySplitIDToClipboard());
 		}
 		LOGGER.debug("getSplitActions: JKMyMoneyViewer has " + (mySplitActions == null ? "no" : mySplitActions.size()) + " split-actions");
 		return mySplitActions;
