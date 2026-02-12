@@ -198,39 +198,39 @@ public class TransactionSum extends JPanel {
 	 * Do the actual calculation.
 	 */
 	private void reCalculate() {
-		if (getSummationType() == null
-				|| getSourceAccounts() == null
-				|| getTargetAccounts() == null
-				|| getSummationType() == null
-				//|| getMinDate() == null
-				//|| getMaxDate() == null
-				|| getBooks() == null) {
+		if ( getSummationType() == null || 
+			 getSourceAccounts() == null ||
+			 getTargetAccounts() == null || 
+			 getSummationType() == null ||
+			 // getMinDate() == null ||
+			 // getMaxDate() == null ||
+			getBooks() == null ) {
 			mySumLabel.setText("---");
 			return;
 		}
 		myTransactionsCounted = 0;
 
-		Set<KMyMoneyAccount> sourceAccounts = new HashSet<KMyMoneyAccount>(getSourceAccounts());
-		Set<KMyMoneyAccount> targetAccounts = new HashSet<KMyMoneyAccount>(buildTransitiveClosure(getTargetAccounts()));
-		Set<KMMComplAcctID> targetAccountsIDs = new HashSet<KMMComplAcctID>();
-		for (KMyMoneyAccount targetAccount : targetAccounts) {
-			targetAccountsIDs.add(targetAccount.getID());
+		Set<KMyMoneyAccount> srcAcctList = new HashSet<KMyMoneyAccount>(getSourceAccounts());
+		Set<KMyMoneyAccount> tgtAcctList = new HashSet<KMyMoneyAccount>(buildTransitiveClosure(getTargetAccounts()));
+		Set<KMMComplAcctID> tgtAcctIDList = new HashSet<KMMComplAcctID>();
+		for ( KMyMoneyAccount tgtAcct : tgtAcctList ) {
+			tgtAcctIDList.add(tgtAcct.getID());
 		}
 
 		////////////////////////////////////
 		// find all applicable transacion
 		Set<KMyMoneyTransactionSplit> transactions = new HashSet<KMyMoneyTransactionSplit>();
 		FixedPointNumber sum = new FixedPointNumber(0);
-		if (sourceAccounts.size() == 0) {
+		if ( srcAcctList.size() == 0 ) {
 			LOGGER.warn("reCalculate: There are no source-accounts given for this transaction-sum");
 		}
-		for (KMyMoneyAccount sourceAccount : sourceAccounts) {
+		for ( KMyMoneyAccount srcAcct : srcAcctList ) {
 			FixedPointNumber addMe =
-					buildSum(sourceAccount,
-							targetAccountsIDs,
-							sourceAccount.getQualifSecCurrID(),
+					buildSum(srcAcct,
+							tgtAcctIDList,
+							srcAcct.getQualifSecCurrID(),
 							transactions);
-			if (addMe == null) {
+			if ( addMe == null ) {
 				mySumLabel.setText("   cannot determine sum");
 				sum = null;
 				break;
@@ -241,14 +241,13 @@ public class TransactionSum extends JPanel {
 		setValue(sum);
 		////////////////////////////////////
 		// set output
-		Iterator<KMyMoneyAccount> iterator = targetAccounts.iterator();
+		Iterator<KMyMoneyAccount> iterator = tgtAcctList.iterator();
 		if (iterator.hasNext()) {
-			mySumLabel.setText("   " + sum.toString() + ""
-					+ iterator.next().getQualifSecCurrID());
+			mySumLabel.setText("   " + sum.toString() + iterator.next().getQualifSecCurrID());
 		} else {
-			Iterator<KMyMoneyAccount> iterator2 = sourceAccounts.iterator();
+			Iterator<KMyMoneyAccount> iterator2 = srcAcctList.iterator();
 			if (iterator2.hasNext()) {
-				mySumLabel.setText("   " + sum.toString() + "" + iterator2.next().getQualifSecCurrID());
+				mySumLabel.setText("   " + sum.toString() + iterator2.next().getQualifSecCurrID());
 			} else {
 				mySumLabel.setText("   no account");
 			}

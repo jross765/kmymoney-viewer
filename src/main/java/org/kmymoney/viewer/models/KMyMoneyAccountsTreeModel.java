@@ -105,11 +105,11 @@ public class KMyMoneyAccountsTreeModel implements TreeModel {
 
         public List<KMyMoneyAccountTreeEntry> getChildTreeNodes() {
             if ( childTreeNodes == null ) {
-                Collection<? extends KMyMoneyAccount> c = getChildAccounts();
-                childTreeNodes = new ArrayList<KMyMoneyAccountTreeEntry>(c.size());
-                for ( KMyMoneyAccount kmymoneyAccount : c ) {
-                    KMyMoneyAccount subaccount = kmymoneyAccount;
-                    childTreeNodes.add(new KMyMoneyAccountTreeEntry(subaccount));
+                Collection<? extends KMyMoneyAccount> acctList = getChildAccounts();
+                childTreeNodes = new ArrayList<KMyMoneyAccountTreeEntry>(acctList.size());
+                for ( KMyMoneyAccount acct : acctList ) {
+                    KMyMoneyAccount subAcct = acct;
+                    childTreeNodes.add(new KMyMoneyAccountTreeEntry(subAcct));
                 }
             }
 

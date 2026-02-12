@@ -132,26 +132,21 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 				if ( split != null ) {
 					if ( split.getTransaction() != null ) {
 						try {
-							List<? extends KMyMoneyTransactionSplit> splits = split.getTransaction().getSplits();
-							for ( KMyMoneyTransactionSplit splt : splits ) {
+							List<? extends KMyMoneyTransactionSplit> spltList = split.getTransaction().getSplits();
+							for ( KMyMoneyTransactionSplit splt : spltList ) {
 								if ( splt != null ) {
 									markTokens(renderer, splt.getMemo());
 								}
 							}
 						} catch (Exception e) {
-							LOGGER.error("[Exception] Problem in "
-									+ getClass().getName() + ":getTableCellRendererComponent()"
-									+ " while traversing splits",
-									e);
+							LOGGER.error("getTableCellRendererComponent: While traversing splits", e);
 						}
 					}
 					markUnbalanced(renderer, split);
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.error("[Exception] Problem in "
-			           + getClass().getName() + ":getTableCellRendererComponent()",
-			             e);
+			LOGGER.error("getTableCellRendererComponent: ", e);
 		}
 
 		// ideas for future enhancements: allow plugins to display icons.
@@ -172,9 +167,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 				renderer.setForeground(Color.red);
 			}
 		} catch (Exception e) {
-			LOGGER.error("[Exception] Problem in "
-			           + getClass().getName() + ":markUnbalanced()",
-			             e);
+			LOGGER.error("markUnbalanced: ", e);
 			renderer.setForeground(Color.red);
 		}
 	}
@@ -193,9 +186,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 				renderer.setForeground(Color.GREEN.darker());
 			}
 		} catch (Exception e) {
-			LOGGER.error("[Exception] Problem in "
-			           + getClass().getName() + ":markTokens()",
-			             e);
+			LOGGER.error("markTokens: ", e);
 		}
 	}
 }
