@@ -937,12 +937,12 @@ public class JKMyMoneyViewer extends JFrame {
 	}
 
 	/**
-	 * @param account the account to show
+	 * @param acct the account to show
 	 */
-	public void openAccountInTab(final KMyMoneyAccount account) {
+	public void openAccountInTab(final KMyMoneyAccount acct) {
 		final TransactionsPanel newTransactionsPanel = new TransactionsPanel();
-		newTransactionsPanel.setAccount(account);
-		String tabName = account.getName();
+		newTransactionsPanel.setAccount(acct);
+		String tabName = acct.getName();
 		addTab(tabName, newTransactionsPanel);
 	}
 
