@@ -75,7 +75,7 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionSplitsTab
 
 		for ( KMyMoneyTransactionSplit splt : getTransaction().getSplits() ) {
 			if ( splt.getAccount().getQualifSecCurrID().getType() != getTransaction().getQualifSecCurrID().getType() || 
-				 ! splt.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID()) ) {
+				 ! splt.getAccount().getQualifSecCurrID().toString().equals(getTransaction().getQualifSecCurrID().toString()) ) {
 				return true;
 			}
 		}
@@ -180,7 +180,7 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionSplitsTab
 			} else if ( columnIndex == TableCols.PLUS.ordinal() ) {
 				if ( splt.getValue().isPositive() ) {
 					if ( splt.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType() && 
-						 splt.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID()) ) {
+						 splt.getAccount().getQualifSecCurrID().toString().equals(getTransaction().getQualifSecCurrID().toString()) ) {
 						return splt.getValueFormatted();
 					}
 					return splt.getValueFormatted() + " (" + splt.getSharesFormatted() + ")";
@@ -190,7 +190,7 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionSplitsTab
 			} else if ( columnIndex == TableCols.MINUS.ordinal() ) {
 				if ( ! splt.getValue().isPositive() ) {
 					if ( splt.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType() && 
-						 splt.getAccount().getQualifSecCurrID().equals(getTransaction().getQualifSecCurrID()) ) {
+						 splt.getAccount().getQualifSecCurrID().toString().equals(getTransaction().getQualifSecCurrID().toString()) ) {
 						return splt.getValueFormatted();
 					}
 					return splt.getValueFormatted() + " (" + splt.getSharesFormatted() + ")";

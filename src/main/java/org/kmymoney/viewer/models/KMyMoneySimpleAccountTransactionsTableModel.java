@@ -39,7 +39,7 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_DATE;
 	
 	// How to format currencies
-	private NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+	private NumberFormat currFmt = NumberFormat.getCurrencyInstance();
 
 	// How to format currencies
 	public static final NumberFormat DEFAULT_CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
@@ -206,15 +206,15 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 	}
 
 	/**
-	 * @param split the split whos account to use for the currency
+	 * @param splt the split whos account to use for the currency
 	 */
-	private void updateCurrencyFormat(final KMyMoneyTransactionSplit split) {
-		currencyFormat = NumberFormat.getNumberInstance();
+	private void updateCurrencyFormat(final KMyMoneyTransactionSplit splt) {
+		currFmt = NumberFormat.getNumberInstance();
 		try {
-			if ( split.getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-				Currency currency = Currency.getInstance(split.getAccount().getQualifSecCurrID().getCode());
-				currencyFormat = NumberFormat.getCurrencyInstance();
-				currencyFormat.setCurrency(currency);
+			if ( splt.getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+				Currency curr = Currency.getInstance(splt.getAccount().getQualifSecCurrID().getCode());
+				currFmt = NumberFormat.getCurrencyInstance();
+				currFmt.setCurrency(curr);
 			}
 		}
 		catch (Exception e) {
