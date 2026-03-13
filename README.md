@@ -4,7 +4,14 @@
 
 A Swing-based GUI viewer for 
 KMyMoney 
-XML-based files.
+XML-based files. It is, of course, based on the modules
+
+* Base
+* API (Core)
+* API Specialized Entities
+* API Extensions,
+
+but *not* on "API Examples" (neither technically nor logically).
 
 ## What is This Repo's Relationship with the Other Repos?
 
@@ -18,8 +25,12 @@ XML-based files.
 ### V. 1.1 &rarr; 1.2
 * Viewer can now be started with command line options:
     * With account ID: Will open new window with according account immediatly after start.
-    * With transaction split ID (or alternatively: account ID and transaction ID): Will open new window with according account immediatly after start (as above with account-ID only), and in addition to that
-mark the according transaction (split).
+    * With transaction split ID (or alternatively: account ID and transaction ID): 
+      Will open new window with according account immediatly after start (as above with 
+      account-ID only), and will, additionally, mark the according transaction (split).
+
+* Copy marked object's ID into clipboard 
+  (context menu for accounts, transactions and splits).
 
 * Fixed a few small bugs.
 
@@ -30,9 +41,13 @@ New.
 
 Almost perfectly symmetric to sister module's V. 1.1.
 
-## Planned
+### V. 1.0
+Please note: Due to considerations about symmetry with the sister project,
+this version *does not exist*.
 
-* Copy marked object's ID into clipboard (context menu).
+Cf. the sister module's README file for more details.
+
+## Planned
 
 * Marking / rendering transactions by more general / flexible rules; extracting stuff like the "TODO" word into config files.
 
@@ -58,6 +73,12 @@ help you to understand where the viewer originally comes from and what it is sup
 
 ## Known Issues
 
-A bit slow -- it takes some 40 s or so to load the current maintainer's personal finance file (not the viewer itself, in fact, but the underlying API). 
+A bit slow -- it takes some 90 s or so to load the current maintainer's 
+personal finances'
+file (not the viewer itself, in fact, but the underlying API). 
 
-This, in the current maintainer's opinion, is not so important for CLI based tools (cf. module "Tools"), and only partly relevant for a GUI (it takes long to load a file, but once it is loaded, e.t. runs fast and smoothly); but calls for specific accounts / transaction (splits) (introduced in V. 1.2) only partially make sense in a real-world scenario; few persons will be willing to wait that long for "quick glimpse".
+This, in the current maintainer's opinion, is not so important for CLI based tools 
+(cf. module "Tools"), and only partly relevant for a GUI (it takes long to load a file, 
+but once it is loaded, e.t. runs fast and smoothly); but calls for a specific account / 
+transaction (split) (introduced in V. 1.2) only partially make sense in a real-world 
+scenario; few persons will be willing to wait that long for a "quick glimpse".
