@@ -46,7 +46,8 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionSplitsTab
 	// How to format dates
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern(Const.STANDARD_DATE_FORMAT);
 
-	// How to format currencies
+	// *Not* for formatting currencies, but for computing min/max *string length* of
+	// formatted currencies:
 	public static final NumberFormat DEFAULT_CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
 
 	// ---------------------------------------------------------------

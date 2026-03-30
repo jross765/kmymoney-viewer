@@ -14,4 +14,8 @@ public class Const {
   public static final int TABLE_COL_AMOUNT_WIDTH_VAL_BIG   = -1000000000;
   
   public static final int TABLE_COL_EXTRA_WIDTH   = 20;
+  
+  // ------------------------------
+  
+  public static final String PSEUDO_ISIN = "XX0000000000";
 }

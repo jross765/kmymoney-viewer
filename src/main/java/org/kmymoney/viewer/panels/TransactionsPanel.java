@@ -8,6 +8,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +29,9 @@ import javax.swing.table.TableModel;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
+import org.kmymoney.api.read.impl.KMyMoneyAccountImpl;
 import org.kmymoney.viewer.Const;
+import org.kmymoney.viewer.GUIServices;
 import org.kmymoney.viewer.actions.TransactionSplitAction;
 import org.kmymoney.viewer.models.KMyMoneySimpleAccountTransactionsTableModel;
 import org.kmymoney.viewer.models.KMyMoneyTransactionSplitsTableModel;
@@ -532,12 +535,11 @@ public class TransactionsPanel extends JPanel {
 		FixedPointNumber valueSumPlus = new FixedPointNumber(0);
 		FixedPointNumber valueSumMinus = new FixedPointNumber(0);
 		FixedPointNumber valueSumBalance = new FixedPointNumber(0);
-		NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
 
 		Collection<KMyMoneyTransactionSplit> splits;
 		splits = getSplitsForSummary();
 		for ( KMyMoneyTransactionSplit splt : splits ) {
-			FixedPointNumber value = splt.getValue();
+			FixedPointNumber value = splt.getShares(); // <-- sic, not getValue()
 			valueSumBalance.add(value);
 			if ( value.isPositive() ) {
 				valueSumPlus.add(value);
@@ -546,21 +548,30 @@ public class TransactionsPanel extends JPanel {
 			}
 		}
 
-		if ( selectedCount < 1 ) {
-			// show a summary for all transactions displayed
-			int count = model.getRowCount();
-			getSelectionSummaryLabel().setText(count + Messages_TransactionsPanel.getString("TransactionsPanel.39") //$NON-NLS-1$
-					+ currencyFormat.format(valueSumPlus.getBigDecimal())
-					+ currencyFormat.format(valueSumMinus.getBigDecimal())
-					+ " = " + currencyFormat.format(valueSumBalance.getBigDecimal())); //$NON-NLS-1$
-		} else {
-			// show a summary only for the selected transactions
-			getSelectionSummaryLabel().setText(selectedCount + Messages_TransactionsPanel.getString("TransactionsPanel.41") //$NON-NLS-1$
-					+ currencyFormat.format(valueSumPlus.getBigDecimal())
-					+ currencyFormat.format(valueSumMinus.getBigDecimal())
-					+ " = " + currencyFormat.format(valueSumBalance.getBigDecimal())); //$NON-NLS-1$
+		KMyMoneyAccount acct = null;
+		if ( splits.size() > 0 ) {
+			ArrayList<KMyMoneyTransactionSplit> hlpList = new ArrayList<KMyMoneyTransactionSplit>(splits);
+			acct = hlpList.get(0).getAccount();
 		}
-
+		
+		if ( acct != null ) {
+			if ( selectedCount < 1 ) {
+				// show a summary for all transactions displayed
+				int count = model.getRowCount();
+				getSelectionSummaryLabel().setText(count + Messages_TransactionsPanel.getString("TransactionsPanel.39") //$NON-NLS-1$
+						+ GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumPlus)
+						+ ( valueSumMinus.compareTo( FixedPointNumber.ZERO ) == 0 ? " - " : " " ) 
+						+ GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumMinus)
+						+ " = " + GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumBalance)); //$NON-NLS-1$
+			} else {
+				// show a summary only for the selected transactions
+				getSelectionSummaryLabel().setText(selectedCount + Messages_TransactionsPanel.getString("TransactionsPanel.41") //$NON-NLS-1$
+						+ GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumPlus)
+						+ ( valueSumMinus.compareTo( FixedPointNumber.ZERO ) == 0 ? " - " : " " ) 
+						+ GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumMinus)
+						+ " = " + GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumBalance)); //$NON-NLS-1$
+			}
+		}
 	}
 
 	/**

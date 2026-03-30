@@ -38,16 +38,14 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 	// How to format dates
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_DATE;
 	
-	// How to format currencies
-	private NumberFormat currFmt = NumberFormat.getCurrencyInstance();
-
-	// How to format currencies
+	// *Not* for formatting currencies, but for computing min/max *string length* of
+	// formatted currencies:
 	public static final NumberFormat DEFAULT_CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
 
 	// ---------------------------------------------------------------
 
 	// The account the transactions of which we are showing.
-	private final KMyMoneyAccount account;
+	private final KMyMoneyAccount acct;
 
 	// The columns we display.
 	private final String[] defaultColumnNames = new String[] {
@@ -67,7 +65,7 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 	 */
 	public KMyMoneySimpleAccountTransactionsTableModel() {
 		super();
-		account = null;
+		acct = null;
 	}
 
 	/**
@@ -75,7 +73,7 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 	 */
 	public KMyMoneySimpleAccountTransactionsTableModel(final KMyMoneyAccount anAccount) {
 		super();
-		account = anAccount;
+		acct = anAccount;
 	}
 
 	// ---------------------------------------------------------------
@@ -102,11 +100,11 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 	 * @return the splits that affect this account.
 	 */
 	public List<? extends KMyMoneyTransactionSplit> getTransactionSplits() {
-		if ( account == null ) {
+		if ( acct == null ) {
 			return new LinkedList<KMyMoneyTransactionSplit>();
 		}
 		
-		return account.getTransactionSplits();
+		return acct.getTransactionSplits();
 	}
 
 	/**
@@ -141,8 +139,6 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 		try {
 			KMyMoneyTransactionSplit split = getTransactionSplit(rowIndex);
 
-			updateCurrencyFormat(split);
-
 			if ( columnIndex == TableCols.DATE.ordinal() ) {
 				return split.getTransaction().getDatePostedFormatted();
 			} else if ( columnIndex == TableCols.TRANSACTION.ordinal() ) {
@@ -170,10 +166,10 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 					return "";
 				}
 			} else if ( columnIndex == TableCols.BALANCE.ordinal() ) {
-				if ( account != null ) {
-					return GUIServices.formatBalance((KMyMoneyAccountImpl) account, account.getBalance(split));
+				if ( acct != null ) {
+					return GUIServices.formatBalance((KMyMoneyAccountImpl) acct, acct.getBalance(split));
 				} else {
-					return GUIServices.formatBalance((KMyMoneyAccountImpl) account, split.getAccount().getBalance(split));
+					return GUIServices.formatBalance((KMyMoneyAccountImpl) acct, split.getAccount().getBalance(split));
 				}
 			} else {
 				throw new IllegalArgumentException("illegal column index " + columnIndex);
@@ -202,24 +198,6 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 			};
 			new Thread(runnable).start();
 			return "ERROR";
-		}
-	}
-
-	/**
-	 * @param splt the split whos account to use for the currency
-	 */
-	private void updateCurrencyFormat(final KMyMoneyTransactionSplit splt) {
-		currFmt = NumberFormat.getNumberInstance();
-		try {
-			if ( splt.getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-				Currency curr = Currency.getInstance(splt.getAccount().getQualifSecCurrID().getCode());
-				currFmt = NumberFormat.getCurrencyInstance();
-				currFmt.setCurrency(curr);
-			}
-		}
-		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
