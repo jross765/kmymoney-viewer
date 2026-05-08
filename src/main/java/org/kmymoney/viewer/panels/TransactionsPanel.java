@@ -6,7 +6,6 @@ import java.awt.FontMetrics;
 import java.awt.Toolkit;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
-import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +25,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
@@ -38,8 +38,6 @@ import org.kmymoney.viewer.models.KMyMoneyTransactionSplitsTableModel;
 import org.kmymoney.viewer.widgets.MultiLineToolTip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 /**
  * This Panel shows a list of transactions.
@@ -532,19 +530,19 @@ public class TransactionsPanel extends JPanel {
 	 */
 	private void updateSelectionSummary() {
 		int selectedCount = getTransactionTable().getSelectedRowCount();
-		FixedPointNumber valueSumPlus = new FixedPointNumber(0);
-		FixedPointNumber valueSumMinus = new FixedPointNumber(0);
-		FixedPointNumber valueSumBalance = new FixedPointNumber(0);
+		BigFraction valueSumBalance = BigFraction.ZERO;
+		BigFraction valueSumPlus = BigFraction.ZERO;
+		BigFraction valueSumMinus = BigFraction.ZERO;
 
 		Collection<KMyMoneyTransactionSplit> splits;
 		splits = getSplitsForSummary();
 		for ( KMyMoneyTransactionSplit splt : splits ) {
-			FixedPointNumber value = splt.getShares(); // <-- sic, not getValue()
-			valueSumBalance.add(value);
-			if ( value.isPositive() ) {
-				valueSumPlus.add(value);
+			BigFraction value = splt.getSharesRat(); // <-- sic, not getValueRat()
+			valueSumBalance = valueSumBalance.add(value);
+			if ( value.compareTo(BigFraction.ZERO) >= 0 ) {
+				valueSumPlus = valueSumPlus.add(value);
 			} else {
-				valueSumMinus.add(value);
+				valueSumMinus = valueSumMinus.add(value);
 			}
 		}
 
@@ -560,14 +558,14 @@ public class TransactionsPanel extends JPanel {
 				int count = model.getRowCount();
 				getSelectionSummaryLabel().setText(count + Messages_TransactionsPanel.getString("TransactionsPanel.39") //$NON-NLS-1$
 						+ GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumPlus)
-						+ ( valueSumMinus.compareTo( FixedPointNumber.ZERO ) == 0 ? " - " : " " ) 
+						+ ( valueSumMinus.compareTo( BigFraction.ZERO ) == 0 ? " - " : " " ) 
 						+ GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumMinus)
 						+ " = " + GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumBalance)); //$NON-NLS-1$
 			} else {
 				// show a summary only for the selected transactions
 				getSelectionSummaryLabel().setText(selectedCount + Messages_TransactionsPanel.getString("TransactionsPanel.41") //$NON-NLS-1$
 						+ GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumPlus)
-						+ ( valueSumMinus.compareTo( FixedPointNumber.ZERO ) == 0 ? " - " : " " ) 
+						+ ( valueSumMinus.compareTo( BigFraction.ZERO ) == 0 ? " - " : " " ) 
 						+ GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumMinus)
 						+ " = " + GUIServices.formatBalance((KMyMoneyAccountImpl) acct, valueSumBalance)); //$NON-NLS-1$
 			}

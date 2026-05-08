@@ -66,7 +66,7 @@ public class KMyMoneyAccountsTreeModel implements TreeModel {
 
         @Override
         public List<? extends KMyMoneyAccount> getChildAccounts() {
-        	ArrayList result = new ArrayList<KMyMoneyAccount>();
+        	ArrayList<KMyMoneyAccount> result = new ArrayList<KMyMoneyAccount>();
         	result.add( file.getRootAccount() );
             return result;
         }

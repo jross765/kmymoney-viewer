@@ -3,8 +3,6 @@ package org.kmymoney.viewer.models;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,8 +11,8 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.event.TableModelListener;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
-import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 
 /**
  * A Table model that shows a given list of transaction.
@@ -152,13 +150,13 @@ public class KMyMoneySimpleTransactionSplitsTableModel implements KMyMoneyTransa
                 }
                 return desc;
             } else if ( columnIndex == TableCols.PLUS.ordinal() ) {
-            	if ( split.getShares().isPositive() ) {
+            	if ( split.getSharesRat().compareTo(BigFraction.ZERO) >= 0 ) {
             		return split.getSharesFormatted();
             	} else {
             		return "";
             	}
             } else if ( columnIndex == TableCols.MINUS.ordinal() ) {
-                if ( ! split.getShares().isPositive() ) {
+                if ( split.getSharesRat().compareTo(BigFraction.ZERO) < 0 ) {
                  return split.getSharesFormatted();
                 } else {
                     return "";

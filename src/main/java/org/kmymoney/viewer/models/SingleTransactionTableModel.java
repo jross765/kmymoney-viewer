@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.TableModelListener;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.Const;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
@@ -179,7 +180,7 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionSplitsTab
 			} else if ( columnIndex == TableCols.ACCOUNT.ordinal() ) {
 				return splt.getAccount().getQualifiedName();
 			} else if ( columnIndex == TableCols.PLUS.ordinal() ) {
-				if ( splt.getValue().isPositive() ) {
+				if ( splt.getValueRat().compareTo(BigFraction.ZERO) >= 0 ) {
 					if ( splt.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType() && 
 						 splt.getAccount().getQualifSecCurrID().toString().equals(getTransaction().getQualifSecCurrID().toString()) ) {
 						return splt.getValueFormatted();
@@ -189,7 +190,7 @@ public class SingleTransactionTableModel implements KMyMoneyTransactionSplitsTab
 					return "";
 				}
 			} else if ( columnIndex == TableCols.MINUS.ordinal() ) {
-				if ( ! splt.getValue().isPositive() ) {
+				if ( splt.getValueRat().compareTo(BigFraction.ZERO) < 0 ) {
 					if ( splt.getAccount().getQualifSecCurrID().getType() == getTransaction().getQualifSecCurrID().getType() && 
 						 splt.getAccount().getQualifSecCurrID().toString().equals(getTransaction().getQualifSecCurrID().toString()) ) {
 						return splt.getValueFormatted();

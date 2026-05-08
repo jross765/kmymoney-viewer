@@ -2,9 +2,8 @@ package org.kmymoney.viewer;
 
 import java.util.Locale;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.impl.KMyMoneyAccountImpl;
-
-import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 public class GUIServices
 {
@@ -12,12 +11,12 @@ public class GUIServices
     // ---------------------------------------------------------------
 	// Redundant wrappers for convenience.
 	
-	public static String formatBalance(KMyMoneyAccountImpl acct, FixedPointNumber blnc) {
-		return KMyMoneyAccountImpl.formatBalance( acct, blnc );
+	public static String formatBalance(KMyMoneyAccountImpl acct, BigFraction blnc) {
+		return KMyMoneyAccountImpl.formatBalanceRat( acct, blnc );
 	}
 	
-	public static String formatBalance(KMyMoneyAccountImpl acct, FixedPointNumber blnc, Locale lcl) {
-		return KMyMoneyAccountImpl.formatBalance( acct, blnc, lcl );
+	public static String formatBalance(KMyMoneyAccountImpl acct, BigFraction blnc, Locale lcl) {
+		return KMyMoneyAccountImpl.formatBalanceRat( acct, blnc, lcl );
 	}
 	
 }

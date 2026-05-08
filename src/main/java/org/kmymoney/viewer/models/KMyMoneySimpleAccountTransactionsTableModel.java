@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Currency;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,10 +12,10 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.event.TableModelListener;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyAccountImpl;
-import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.viewer.GUIServices;
 
 /**
@@ -154,22 +153,22 @@ public class KMyMoneySimpleAccountTransactionsTableModel implements KMyMoneyTran
 				}
 				return desc;
 			} else if ( columnIndex == TableCols.PLUS.ordinal() ) {
-				if ( split.getShares().isPositive() ) {
+				if ( split.getSharesRat().compareTo(BigFraction.ZERO) >= 0 ) {
 					return split.getSharesFormatted();
 				} else {
 					return "";
 				}
 			} else if ( columnIndex == TableCols.MINUS.ordinal() ) {
-				if ( ! split.getShares().isPositive() ) {
+				if ( split.getSharesRat().compareTo(BigFraction.ZERO) < 0 ) {
 					return split.getSharesFormatted();
 				} else {
 					return "";
 				}
 			} else if ( columnIndex == TableCols.BALANCE.ordinal() ) {
 				if ( acct != null ) {
-					return GUIServices.formatBalance((KMyMoneyAccountImpl) acct, acct.getBalance(split));
+					return GUIServices.formatBalance((KMyMoneyAccountImpl) acct, acct.getBalanceRat(split));
 				} else {
-					return GUIServices.formatBalance((KMyMoneyAccountImpl) acct, split.getAccount().getBalance(split));
+					return GUIServices.formatBalance((KMyMoneyAccountImpl) acct, split.getAccount().getBalanceRat(split));
 				}
 			} else {
 				throw new IllegalArgumentException("illegal column index " + columnIndex);
