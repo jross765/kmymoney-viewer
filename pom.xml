@@ -6,18 +6,18 @@
 	<parent>
 		<groupId>org.kmymoney</groupId>
 		<artifactId>kmymoney</artifactId>
-		<version>2026-04</version>
+		<version>2026-06</version>
 	</parent>
 
 	<artifactId>kmymoney-viewer</artifactId>
 	<name>${project.title} : Viewer</name>
-	<version>1.2</version>
+	<version>1.3</version>
 
 	<properties>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<schnorxolib-base-systemPath>/home/xxx/Programme-ProdReady/basicstuff/schnorxolib/schnorxolib-base-0.2.jar</schnorxolib-base-systemPath>
+		<schnorxolib-base-systemPath>/home/xxx/Programme-ProdReady/basicstuff/schnorxolib/schnorxolib-base-0.3.jar</schnorxolib-base-systemPath>
 
 	</properties>
 
@@ -37,7 +37,7 @@
 			<dependency>
 				<groupId>org.kmymoney</groupId>
 				<artifactId>kmymoney-base</artifactId>
-				<version>0.9</version>
+				<version>0.10</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -45,7 +45,7 @@
 			<dependency>
 				<groupId>org.kmymoney</groupId>
 				<artifactId>kmymoney-api</artifactId>
-				<version>0.9</version>
+				<version>0.10</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -53,7 +53,7 @@
 			<dependency>
 				<groupId>org.kmymoney</groupId>
 				<artifactId>kmymoney-api-spec</artifactId>
-				<version>0.3</version>
+				<version>0.4</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -61,7 +61,7 @@
 			<dependency>
 				<groupId>org.kmymoney</groupId>
 				<artifactId>kmymoney-api-ext</artifactId>
-				<version>0.9</version>
+				<version>0.10</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -90,14 +90,14 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-numbers-core</artifactId>
-			<version>1.2</version>
+			<version>1.3</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-numbers-fraction -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-numbers-fraction</artifactId>
-			<version>1.2</version>
+			<version>1.3</version>
 		</dependency>
 
 		<!-- *********************************************************  -->
@@ -105,7 +105,7 @@
 		<dependency>
 			<groupId>xyz.schnorxoborx.schnorxolib</groupId>
 			<artifactId>schnorxolib-base</artifactId>
-			<version>0.2</version>
+			<version>0.3</version>
 			<scope>system</scope>
 			<systemPath>${schnorxolib-base-systemPath}</systemPath>
 		</dependency>
@@ -116,7 +116,7 @@
 		<dependency>
 			<groupId>org.kmymoney</groupId>
 			<artifactId>kmymoney-base</artifactId>
-			<version>0.9</version>
+			<version>0.10</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -124,7 +124,7 @@
 		<dependency>
 			<groupId>org.kmymoney</groupId>
 			<artifactId>kmymoney-api</artifactId>
-			<version>0.9</version>
+			<version>0.10</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -132,7 +132,7 @@
 		<dependency>
 			<groupId>org.kmymoney</groupId>
 			<artifactId>kmymoney-api-spec</artifactId>
-			<version>0.3</version>
+			<version>0.4</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -140,7 +140,7 @@
 		<dependency>
 			<groupId>org.kmymoney</groupId>
 			<artifactId>kmymoney-api-ext</artifactId>
-			<version>0.9</version>
+			<version>0.10</version>
 			<scope>compile</scope>
 		</dependency>
 
