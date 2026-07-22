@@ -26,6 +26,7 @@ but *not* on "API Examples" (neither technically nor logically).
 Cf. document "[Major Changes](https://github.com/jross765/JKMyMoneyLibNTools/kmymoney-viewer/major_changes.md)".
 
 ## Planned
+It should go without saying, but the following points are of course subject to change and by no means a promise that they will actually be implemented soon:
 
 * Marking / rendering transactions by more general / flexible rules; extracting stuff like the "TODO" word into config files.
 
@@ -46,8 +47,9 @@ Only partially / indirectly relevant here, but still...:
 
 Have a look at the sister module's README file, section "Scope"; 
 you cannot directly transfer e.t. there to the KMyMoney viewer, but nevertheless, it will
-help you to understand where the viewer originally comes from and what it is supposed to do and what not.
-
+help you to understand where the viewer originally comes from,
+what it is supposed to do and what not, and most importantly: 
+the rationale behind all that.
 
 ## Known Issues
 
