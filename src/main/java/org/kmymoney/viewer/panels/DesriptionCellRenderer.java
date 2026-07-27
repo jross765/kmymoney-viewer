@@ -25,6 +25,19 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DesriptionCellRenderer.class.getName());
 
+	// ---------------------------------------------------------------
+	// ::MAGIC
+
+	private static final String TAG_PREFIX    = "::";
+	
+	private static final String TODO_TAG_RAW  = "TODO";
+	private static final String CHECK_TAG_RAW = "CHECK";
+	private static final String OK_TAG_RAW    = "OK";
+
+	private static final String TODO_TAG  = TAG_PREFIX + TODO_TAG_RAW;
+	private static final String CHECK_TAG = TAG_PREFIX + CHECK_TAG_RAW;
+	private static final String OK_TAG    = TAG_PREFIX + OK_TAG_RAW;
+
 	//------------------------ support for propertyChangeListeners ------------------
 
 	/**
@@ -49,9 +62,10 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 	 */
 	public final void addPropertyChangeListener(
 			final PropertyChangeListener listener) {
-		if (myPropertyChange == null) {
+		if ( myPropertyChange == null ) {
 			myPropertyChange = new PropertyChangeSupport(this);
 		}
+		
 		myPropertyChange.addPropertyChangeListener(listener);
 	}
 
@@ -65,9 +79,10 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 	 */
 	public final void addPropertyChangeListener(final String propertyName,
 			final PropertyChangeListener listener) {
-		if (myPropertyChange == null) {
+		if ( myPropertyChange == null ) {
 			myPropertyChange = new PropertyChangeSupport(this);
 		}
+		
 		myPropertyChange.addPropertyChangeListener(propertyName, listener);
 	}
 
@@ -79,7 +94,7 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 	 */
 	public final void removePropertyChangeListener(final String propertyName,
 			final PropertyChangeListener listener) {
-		if (myPropertyChange != null) {
+		if ( myPropertyChange != null ) {
 			myPropertyChange.removePropertyChangeListener(propertyName, listener);
 		}
 	}
@@ -93,21 +108,12 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 	 */
 	public synchronized void removePropertyChangeListener(
 			final PropertyChangeListener listener) {
-		if (myPropertyChange != null) {
+		if ( myPropertyChange != null ) {
 			myPropertyChange.removePropertyChangeListener(listener);
 		}
 	}
 
 	//-------------------------------------------------------
-
-	/**
-	 * Just an overridden ToString to return this classe's name
-	 * and hashCode.
-	 * @return className and hashCode
-	 */
-	public String toString() {
-		return "DesriptionCellRenderer@" + hashCode();
-	}
 
 	/** 
 	 * ${@inheritDoc}.
@@ -155,40 +161,62 @@ public class DesriptionCellRenderer implements TableCellRenderer {
 		return renderer;
 	}
 
+	//-------------------------------------------------------
+
 	/**
-	 * Check for unbalanced transactions and mark them in red. 
+	 * Check whether transaction is balanced and mark it in pink, if not.
+	 *  
 	 * @param renderer the renderer to modify it's style
 	 * @param split the transaction we display
 	 */
 	private void markUnbalanced(final JLabel renderer, final KMyMoneyTransactionSplit split) {
 		try {
-			if ( split.getTransaction() == null || 
-				 ! split.getTransaction().isBalanced() ) {
-				renderer.setForeground(Color.red);
+			if ( split.getTransaction() != null ) {
+				if ( ! split.getTransaction().isBalanced() ) {
+					Font f = renderer.getFont();
+					renderer.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+					renderer.setForeground(Color.RED);
+				}
+			} else {
+				renderer.setForeground(Color.GRAY);
 			}
 		} catch (Exception e) {
 			LOGGER.error("markUnbalanced: ", e);
-			renderer.setForeground(Color.red);
+			renderer.setForeground(Color.GRAY);
 		}
 	}
 
 	/**
-	 * Make them bold of they contain the Text "TODO".<br/>
-	 * If not and they contain " OK", mark them dark-green.
+	 * Change text format depending on whether specific tags are contained in it.<br/>
+
 	 * @param renderer the renderer to modify its style
 	 */
 	private void markTokens(final JLabel renderer, final String text) {
 		try {
-			if ( text.contains("TODO") ) {
+			if ( text.contains(TODO_TAG) ) {
 				Font f = renderer.getFont();
 				renderer.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-			} else if ( text.contains(" OK") ) {
+				renderer.setForeground(Color.BLUE);
+			} else if ( text.contains(CHECK_TAG) ) {
+				Font f = renderer.getFont();
+				renderer.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+				renderer.setForeground(Color.ORANGE.darker());
+			} else if ( text.contains(OK_TAG) ) {
+				Font f = renderer.getFont();
+				renderer.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
 				renderer.setForeground(Color.GREEN.darker());
 			}
 		} catch (Exception e) {
 			LOGGER.error("markTokens: ", e);
+//			renderer.setForeground(Color.GRAY);
 		}
 	}
-}
 
+	//-------------------------------------------------------
+
+	public String toString() {
+		return "DesriptionCellRenderer@" + hashCode();
+	}
+
+}
 

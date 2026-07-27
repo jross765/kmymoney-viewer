@@ -64,7 +64,7 @@ public class ShowTransactionPanel extends JPanel {
 	// ---------------------------------------------------------------
 
 	// The table showing the splits.
-	private JTable trxTab;
+	private JTable spltTab;
 
 	// My SCrollPane over {@link #trxTab}.
 	private JScrollPane trxTabScrollPane;
@@ -214,7 +214,7 @@ public class ShowTransactionPanel extends JPanel {
 	}
 
 	/**
-	 * The model of our ${@link #trxTab}.
+	 * The model of our ${@link #spltTab}.
 	 */
 	private KMyMoneyTransactionSplitsTableModel model;
 
@@ -241,32 +241,38 @@ public class ShowTransactionPanel extends JPanel {
 		model = aModel;
 
 		getTransactionSplitTable().setModel(model);
-		trxTab.setAutoCreateRowSorter(false);
+		spltTab.setAutoCreateRowSorter(false);
 		
 		// ---
 		// BEGIN col widths
-		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(trxTab.getFont());
+		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(spltTab.getFont());
 
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setPreferredWidth( //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setPreferredWidth( //$NON-NLS-1$
 				SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DATE_FORMAT.format(LocalDateTime.now())) + Const.TABLE_COL_EXTRA_WIDTH);
 
 		int currencyWidthDefault = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_SMALL));
 		int currencyWidthMax     = SwingUtilities.computeStringWidth(metrics, SingleTransactionTableModel.DEFAULT_CURRENCY_FORMAT.format(Const.TABLE_COL_AMOUNT_WIDTH_VAL_BIG)) * 2; // sic, times 2 because of add. info in case of non-currency
 
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setPreferredWidth(SwingUtilities.computeStringWidth(metrics, KMyMoneyTransactionSplit.Action.REMOVE_SHARES.toString())); //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setPreferredWidth(currencyWidthDefault); //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setPreferredWidth(SwingUtilities.computeStringWidth(metrics, KMyMoneyTransactionSplit.Action.REMOVE_SHARES.toString())); //$NON-NLS-1$
 
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setMinWidth(Const.TABLE_COL_MIN_WIDTH); //$NON-NLS-1$
 
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setMaxWidth(Const.TABLE_COL_MAX_WIDTH); //$NON-NLS-1$
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setMaxWidth(currencyWidthMax); //$NON-NLS-1$
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setMaxWidth(currencyWidthMax); //$NON-NLS-1$
-		trxTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setMaxWidth((int) ( SwingUtilities.computeStringWidth(metrics, KMyMoneyTransactionSplit.Action.REINVEST_DIVIDEND.toString()) * FACTOR_COL_WIDTH_ACTION ) ); //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.4")).setMaxWidth(Const.TABLE_COL_MAX_WIDTH); //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.5")).setMaxWidth(currencyWidthMax); //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.6")).setMaxWidth(currencyWidthMax); //$NON-NLS-1$
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.7")).setMaxWidth((int) ( SwingUtilities.computeStringWidth(metrics, KMyMoneyTransactionSplit.Action.REINVEST_DIVIDEND.toString()) * FACTOR_COL_WIDTH_ACTION ) ); //$NON-NLS-1$
 		// END col widths
+		// ---
+		
+		// ---
+		// BEGIN cell renderers
+		spltTab.getColumn(Messages_ShowTransactionPanel.getString("ShowTransactionPanel.8")).setCellRenderer(new DesriptionCellRenderer()); //$NON-NLS-1$
+		// END cell renderers
 		// ---
 	}
 
@@ -290,8 +296,8 @@ public class ShowTransactionPanel extends JPanel {
 	 * @return javax.swing.JTable
 	 */
 	protected JTable getTransactionSplitTable() {
-		if (trxTab == null) {
-			trxTab = new JTable() {
+		if (spltTab == null) {
+			spltTab = new JTable() {
 				// *****
 				/**
 				 * Our TransactionsPanel.java.
@@ -333,7 +339,7 @@ public class ShowTransactionPanel extends JPanel {
 			};
 			
 			setModel(new SingleTransactionTableModel());
-			trxTab.addMouseListener(new MouseAdapter() {
+			spltTab.addMouseListener(new MouseAdapter() {
 
 				/** show ShowTransactionPanel#getCellPopupMenu() if mousePressed is a popupTrigger on this platform.
 				 * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
@@ -342,16 +348,16 @@ public class ShowTransactionPanel extends JPanel {
 				public void mousePressed(final MouseEvent aE) {
 					try {
 						if ( aE.isPopupTrigger() ) {
-							int row = trxTab.rowAtPoint(aE.getPoint());
+							int row = spltTab.rowAtPoint(aE.getPoint());
 							if ( row > 0 ) {
 								getCellPopupMenu(row).show((JComponent) aE.getSource(),
 										aE.getX(), aE.getY());
 							} else {
-								LOGGER.debug("getTransactionTable.mousePressed: No split-row below mouse found, not showing popup-menu"); //$NON-NLS-1$
+								LOGGER.debug("getTransactionSplitTable.mousePressed: No split-row below mouse found, not showing popup-menu"); //$NON-NLS-1$
 							}
 						}
 					} catch (Exception e) {
-						LOGGER.error("getTransactionTable.mousePressed: Error showing popup menu", e); //$NON-NLS-1$
+						LOGGER.error("getTransactionSplitTable.mousePressed: Error showing popup menu", e); //$NON-NLS-1$
 					}
 				}
 
@@ -362,22 +368,22 @@ public class ShowTransactionPanel extends JPanel {
 				public void mouseReleased(final MouseEvent aE) {
 					try {
 						if ( aE.isPopupTrigger() ) {
-							int row = trxTab.rowAtPoint(aE.getPoint());
+							int row = spltTab.rowAtPoint(aE.getPoint());
 							if ( row > 0 ) {
 								getCellPopupMenu(row).show((JComponent) aE.getSource(),
 										aE.getX(), aE.getY());
 							} else {
-								LOGGER.debug("getTransactionTable.mouseReleased: No split-row below mouse found, not showing popup-menu"); //$NON-NLS-1$
+								LOGGER.debug("getTransactionSplitTable.mouseReleased: No split-row below mouse found, not showing popup-menu"); //$NON-NLS-1$
 							}
 						}
 					} catch (Exception e) {
-						LOGGER.error("getTransactionTable.mouseReleased: Error showing popup-menu", e); //$NON-NLS-1$
+						LOGGER.error("getTransactionSplitTable.mouseReleased: Error showing popup-menu", e); //$NON-NLS-1$
 					}
 				}
 			});
 		}
 		
-		return trxTab;
+		return spltTab;
 	}
 
 

@@ -90,6 +90,16 @@ public class TransactionsPanel extends JPanel {
 	// ---------------------------------------------------------------
 
 	/**
+	 * This is the default constructor.
+	 */
+	public TransactionsPanel() {
+		super();
+		initialize();
+	}
+
+	// ---------------------------------------------------------------
+
+	/**
 	 * @return Returns the model
 	 */
 	public KMyMoneyTransactionSplitsTableModel getModel() {
@@ -162,21 +172,19 @@ public class TransactionsPanel extends JPanel {
 		// END col widths
 		// ---
 		
+		// ---
+		// BEGIN cell renderers
 		getTransactionTable().getColumn(Messages_TransactionsPanel.getString("TransactionsPanel.6")).setCellRenderer(new DesriptionCellRenderer()); //$NON-NLS-1$
 		getTransactionTable().getColumn(Messages_TransactionsPanel.getString("TransactionsPanel.7")).setCellRenderer(new DesriptionCellRenderer()); //$NON-NLS-1$
+		// END cell renderers
+		// ---
 
 		updateSelectionSummaryAccountList();
 		updateSelectionSummary();
 		getSingleTransactionPanel().setTransaction(null);
 	}
 
-	/**
-	 * This is the default constructor.
-	 */
-	public TransactionsPanel() {
-		super();
-		initialize();
-	}
+	// ---------------------------------------------------------------
 
 	/**
 	 * Give an account who's transactions to display.
