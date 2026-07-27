@@ -34,9 +34,10 @@ Cf. document "[Major Changes](https://github.com/jross765/JKMyMoneyLibNTools/kmy
 ## Planned
 It should go without saying, but the following points are of course subject to change and by no means a promise that they will actually be implemented soon:
 
-* Marking / rendering transactions by more general / flexible rules; extracting stuff like the "TODO" word into config files.
+* Adding payee in transaction panel (and getting rid of transaction-level
+  column, as it's not really relevant in KMyMoney, as opposed to GnuCash).
 
-* Re-iterating tables and models -- I guess it would be better to handle transactions and transaction splits in completely separate classes (both in package `models` and `panels`) rather than in one class.
+* Show tags (the entities) in transaction (split) panel.
 
 * Introducing detailed-view panels for each supported entity.
 
