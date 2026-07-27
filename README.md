@@ -13,6 +13,12 @@ XML-based files. It is, of course, based on the modules
 
 but *not* on "API Examples" (neither technically nor logically).
 
+Supported languages so far:
+
+* English
+* French
+* German
+
 ## What is This Repo's Relationship with the Other Repos?
 
 * This is a module-level repository which is part of a multi-module project, i.e. it has a parent and several siblings. 

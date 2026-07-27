@@ -1,5 +1,18 @@
 # Major Changes 
 
+## V. 1.2 &rarr; 1.3
+* I18N: Added French language.
+
+* Generalized rendering of unbalanced and/or tagged transactions
+
+  For now, this is based on transaction (split) comments, just as in the sister project, 
+  not on the tag entity.
+
+  **Note:** In theory, both transaction- and transaction-split-comments
+  will define rendering. In practice, however, the former is only partially
+  relevant, as it is not used by the orginal KMyMoney GUI. It does, however, exist,
+  and it is filled by some tools (both published and unpublished ones).
+
 ## V. 1.1 &rarr; 1.2
 * Viewer can now be started with command line options:
     * With account ID: Will open new window with according account immediatly after start.
